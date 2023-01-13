@@ -1,0 +1,51 @@
+###
+@port = 8080
+@api = http://localhost:{{port}}/api/books
+
+### CREATE BOOK
+POST {{api}}
+Content-Type: application/json
+
+{
+  "isbn": "9780141988511",
+  "imgRef": "https://azure.blob.url",
+  "title": "12 Rules for Life: An Antidote to Chaos",
+  "author": "Peterson, Jordan B.",
+  "releaseDate": "16/01/2018",
+  "grossPricePerUnit": 25,
+  "inOffer": true,
+  "discountPercentage": 25,
+  "hasIva": false,
+  "ivaPercentage": 0,
+  "createdDate": "10/01/2023",
+  "description": "JBP's BestSeller",
+  "stock": 100,
+  "visible": true,
+  "recommended": true,
+  "bestSeller": true,
+  "recent": false
+}
+
+### GET ALL BOOKS
+GET {{api}}
+
+###
+@search = bestseller
+
+### GET BOOK BY STRING
+GET {{api}}/{{search}}
+
+###
+@isbn = 9780141988511
+
+### UPDATE BOOK
+PUT {{api}}/{{isbn}}
+Content-Type: application/json
+
+{
+  "description": "THE MULTI-MILLION COPY BESTSELLER",
+  "hasIva": false
+}
+
+### DELETE BOOK
+DELETE {{api}}/{{isbn}}

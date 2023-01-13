@@ -1,25 +1,25 @@
 export default abstract class Book {
-    private isbn: string;
-    private imgRef: string;
-    private title: string;
-    private author: string;
-    private releaseDate: string;
-    private grossPricePerUnit: number;
-    private inOffer: boolean = false;
-    private discountPercentage: number = 0;
-    private hasIva: boolean = false;
-    private ivaPercentage: number = 0 | 12; // only 0 or 12 allowed
+    private isbn: string | undefined = undefined;
+    private imgRef: string | undefined = undefined;
+    private title: string | undefined = undefined;
+    private author: string | undefined = undefined;
+    private releaseDate: string | undefined = undefined;
+    private grossPricePerUnit: number | undefined = undefined;
+    private inOffer: boolean | undefined = undefined;
+    private discountPercentage: number | undefined = undefined;
+    private hasIva: boolean | undefined = undefined;
+    private ivaPercentage: number | undefined = undefined;
 
     constructor(
-        isbn: string,
-        imgRef: string,
-        title: string,
-        author: string,
-        releaseDate: string,
-        grossPricePerUnit: number,
-        inOffer: boolean,
-        discountPercentage: number = 0,
-        hasIva: boolean
+        isbn?: string,
+        imgRef?: string,
+        title?: string,
+        author?: string,
+        releaseDate?: string,
+        grossPricePerUnit?: number,
+        inOffer?: boolean,
+        discountPercentage?: number,
+        hasIva?: boolean
     ) {
         this.isbn = isbn;
         this.imgRef = imgRef;
@@ -33,27 +33,27 @@ export default abstract class Book {
     }
 
     // Getters
-    public getIsbn(): string {
+    public getIsbn(): string | undefined {
         return this.isbn;
     }
 
-    public getImgRef(): string {
+    public getImgRef(): string | undefined {
         return this.imgRef;
     }
 
-    public getTitle(): string {
+    public getTitle(): string | undefined {
         return this.title;
     }
 
-    public getAuthor(): string {
+    public getAuthor(): string | undefined {
         return this.author;
     }
 
-    public getReleaseDate(): string {
+    public getReleaseDate(): string | undefined {
         return this.releaseDate;
     }
 
-    public getGrossPricePerUnit(): number {
+    public getGrossPricePerUnit(): number | undefined {
         return this.grossPricePerUnit;
     }
 
@@ -78,16 +78,16 @@ export default abstract class Book {
     }
 
     // Offer & IVA
-    public isInOffer(): boolean {
+    public isInOffer(): boolean | undefined {
         return this.inOffer;
     }
-    public setInOffer(value: boolean) {
+    public setInOffer(value: boolean | undefined) {
         this.inOffer = value;
     }
-    public getDiscountPercentage(): number {
+    public getDiscountPercentage(): number | undefined {
         return this.discountPercentage;
     }
-    public setDiscountPercentage(discountPercentage: number) {
+    public setDiscountPercentage(discountPercentage: number | undefined) {
         // if this.inOffer = true && (0 < value <= 100); then this.discountPercentage = value;
         // else this.discountPercentage = 0 && this.inOffer = false;
         switch (this.isInOffer()) {
@@ -95,20 +95,29 @@ export default abstract class Book {
                 this.discountPercentage = 0;
                 break;
             case true:
-                if (discountPercentage > 0 && discountPercentage <= 100) {
-                    this.discountPercentage = discountPercentage;
+                if (discountPercentage) {
+                    if (discountPercentage > 0 && discountPercentage <= 100) {
+                        this.discountPercentage = discountPercentage;
+                    } else {
+                        this.discountPercentage = 0;
+                        this.inOffer = false;
+                    }
                 } else {
-                    this.discountPercentage = 0;
-                    this.inOffer = false;
+                    this.discountPercentage = undefined;
+                    this.inOffer = undefined;
                 }
+                break;
+            default:
+                this.discountPercentage = undefined;
+                this.inOffer = undefined;
                 break;
         }
     }
 
-    public itHasIva(): boolean {
+    public itHasIva(): boolean | undefined {
         return this.hasIva;
     }
-    public setHasIva(hasIva: boolean) {
+    public setHasIva(hasIva: boolean | undefined) {
         // if this.hasIva = true; then this.ivaPercentage = 12;
         // else this.ivaPercentage = 0;
         this.hasIva = hasIva;
@@ -119,9 +128,12 @@ export default abstract class Book {
             case true:
                 this.setIvaPercentage(1);
                 break;
+            default:
+                this.setIvaPercentage(undefined);
+                break;
         }
     }
-    public getIvaPercentage(): number {
+    public getIvaPercentage(): number | undefined {
         return this.ivaPercentage;
     }
     private setIvaPercentage(value: number = 0 | 1) {
@@ -133,7 +145,7 @@ export default abstract class Book {
                 this.ivaPercentage = 12;
                 break;
             default:
-                this.ivaPercentage = 0;
+                this.ivaPercentage = undefined;
                 break;
         }
     }

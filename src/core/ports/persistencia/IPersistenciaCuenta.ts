@@ -1,8 +1,8 @@
 import User from "../../entities/User";
 
 export default interface IPersistenciaCuenta {
-    guardarCuentaNueva(user: User): boolean;
     buscarCuenta(user: User): User;
+    guardarCuentaNueva(user: User): boolean;
     actualizarCuenta(user: User): boolean;
     eliminarCuenta(user: User): boolean;
 }

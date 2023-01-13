@@ -14,7 +14,7 @@ export default class GestionDeCuentaClient implements IGestionDeCuentas {
         return client;
     }
 
-    public guardarCuentaNueva(client: Client, iPersistenciaCuenta: IPersistenciaCuenta) {
+    public crearCuentaNueva(client: Client, iPersistenciaCuenta: IPersistenciaCuenta) {
         return iPersistenciaCuenta.guardarCuentaNueva(client);
     }
 
