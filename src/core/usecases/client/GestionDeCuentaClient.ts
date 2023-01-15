@@ -4,7 +4,7 @@ import Client from "../../entities/Client";
 import Transaction from "../../entities/Transaction";
 import User from "../../entities/User";
 import IPersistenciaCuenta from "../../ports/persistencia/IPersistenciaCuenta";
-import IGestionDeCuentas from "../IGestionDeCuentas";
+import IGestionDeCuentas from "../IGestionDeAutenticacion";
 
 export default class GestionDeCuentaClient implements IGestionDeCuentas {
     public crearCuenta(client: Client, billingInfo: BillingInfo, cards: Card[], transactions: Transaction[]) {

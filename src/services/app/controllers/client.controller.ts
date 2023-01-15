@@ -7,7 +7,7 @@ import { BookConverter } from '../utils';
 
 export default class ClientController {
 
-    public async createBook(req: Request, res: Response) {
+    public async createClient(req: Request, res: Response) {
         try {
 
             const newStockBook = BookConverter.jsonToBook(req);
@@ -23,36 +23,7 @@ export default class ClientController {
         }
     }
 
-    public async getAll(req: Request, res: Response) {
-        try {
-
-            const useCaseGestionarInicio = new GestionDeInicio();
-            const resultado = await useCaseGestionarInicio.listarCatalogoDeLibros(new PersistenciaDeLibros());
-            return res.status(200).json(resultado);
-
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ msg: `Server internal error!` });
-        }
-    }
-
-    public async getBooksByString(req: Request, res: Response) {
-        try {
-
-            const searchString = req.params.search;
-            if (searchString.length <= 5) return res.status(400).json({ msg: `Bad request, please verify!` });
-            const useCaseGestionarInicio = new GestionDeInicio();
-            const resultado = await useCaseGestionarInicio.buscarLibro(searchString, new PersistenciaDeLibros());
-            if (resultado.length == 0) return res.status(404).json({ msg: `No matches were found!` });
-            return res.status(200).json(resultado);
-
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ msg: `Server internal error!` });
-        }
-    }
-
-    public async updateBook(req: Request, res: Response) {
+    public async updateClient(req: Request, res: Response) {
         try {
 
             const stockBookToSearch = new StockBook(req.params.isbn);
@@ -68,7 +39,7 @@ export default class ClientController {
         }
     }
 
-    public async deleteBook(req: Request, res: Response) {
+    public async deleteClient(req: Request, res: Response) {
         try {
 
             const stockBookToDelete = new StockBook(req.params.isbn);

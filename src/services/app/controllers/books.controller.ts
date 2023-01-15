@@ -15,7 +15,7 @@ export default class BooksController {
             const resultado = await useCaseGestionarLibro.crearLibro(newStockBook, new PersistenciaDeLibros());
             if (resultado === newStockBook) return res.status(303).json({ msg: `${newStockBook.getIsbn()} already exists!` });
             if (!resultado.getIsbn()) return res.status(400).json({ msg: `${newStockBook.getIsbn()} was not saved!` });
-            return res.status(200).json({ msg: `${resultado.getIsbn()} saved!` });
+            return res.status(201).json({ msg: `${resultado.getIsbn()} saved!` });
 
         } catch (error) {
             console.error(error);

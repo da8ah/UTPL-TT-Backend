@@ -6,10 +6,8 @@ const clientsRouter = Router();
 export const API_PATH = "/api/clients";
 
 const clientsController = new ClientController();
-clientsRouter.post(API_PATH, clientsController.createBook);
-clientsRouter.get(API_PATH, clientsController.getAll);
-clientsRouter.get(API_PATH + "/:search", clientsController.getBooksByString);
-clientsRouter.put(API_PATH + "/:isbn", clientsController.updateBook);
-clientsRouter.delete(API_PATH + "/:isbn", clientsController.deleteBook);
+clientsRouter.post(API_PATH, clientsController.createClient);
+clientsRouter.put(API_PATH + "/:user", clientsController.updateClient);
+clientsRouter.delete(API_PATH + "/:user", clientsController.deleteClient);
 
 export default clientsRouter;

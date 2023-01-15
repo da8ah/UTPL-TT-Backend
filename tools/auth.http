@@ -1,0 +1,44 @@
+###
+@port = 8080
+@api = http://localhost:{{port}}
+
+### CREATE CLIENT
+POST {{api}}/signup
+Content-Type: application/json
+
+{
+    "user": "tiber",
+    "name": "da8ah",
+    "email": "tiber@email.com",
+    "mobile": "+593000000001",
+    "password": "tiber",
+    "billingInfo": {
+      "toWhom": "tiber",
+      "ci": "1000000001",
+      "provincia": "Loja",
+      "ciudad": "Loja",
+      "numCasa": "000",
+      "calles": "Principal y Secundaria"
+    }
+}
+
+###
+@user = tiber
+
+### GET CLIENT BY USER
+GET {{api}}/{{user}}
+
+###
+@isbn = 9780141988511
+
+### UPDATE BOOK
+PUT {{api}}/{{isbn}}
+Content-Type: application/json
+
+{
+  "description": "THE MULTI-MILLION COPY BESTSELLER",
+  "hasIva": false
+}
+
+### DELETE BOOK
+DELETE {{api}}/{{isbn}}

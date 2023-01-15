@@ -1,25 +1,30 @@
 import { Schema, model, Document } from 'mongoose';
 
+export interface IBillingInfoModel extends Document {
+    toWhom: string,
+    ci: string,
+    provincia: string,
+    ciudad: string,
+    numCasa: string,
+    calles: string
+}
+
+export interface ICardModel extends Document {
+    ownerName: string,
+    cardNumber: string,
+    code: string,
+    expiryDate: string
+}
+
 export interface IClientModel extends Document {
     user: string,
     name: string,
     email: string,
     mobile: string,
     password: string,
-    billingInfo: {
-        toWhom: string,
-        ci: string,
-        provincia: string,
-        ciudad: string,
-        numCasa: string,
-        calles: string
-    },
-    cards: {
-        ownerName: string,
-        cardNumber: string,
-        code: string,
-        expiryDate: string
-    }[]
+    billingInfo: IBillingInfoModel,
+    cards: ICardModel[],
+    transactions: { id: string }[]
 }
 
 const billingInfoSchema = new Schema(
@@ -111,7 +116,7 @@ const clientSchema = new Schema(
             type: String,
             required: true
         },
-        billingInfo: [{ type: billingInfoSchema }],
+        billingInfo: { type: billingInfoSchema },
         cards: [{ types: cardSchema }],
         transactions: [{
             id: {

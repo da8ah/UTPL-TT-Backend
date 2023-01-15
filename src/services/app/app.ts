@@ -5,8 +5,7 @@ import morgan from 'morgan';
 
 import config from '../config/config';
 import booksRouter from './routes/books.routes';
-// import authRouter from './routes/auth.routes';
-// import paymentRouter from './routes/auth/payment.routes';
+import authRouter from './routes/auth.routes';
 // import passportMiddleware from './middlewares/passport';
 
 const app = express();
@@ -23,7 +22,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use(booksRouter);
-// app.use(authRouter);
+app.use(authRouter);
 // app.use(paymentRouter);
 
 export default app;
