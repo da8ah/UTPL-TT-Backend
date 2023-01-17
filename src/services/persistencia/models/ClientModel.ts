@@ -1,4 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 export interface IBillingInfoModel extends Document {
     toWhom: string,
@@ -24,7 +25,8 @@ export interface IClientModel extends Document {
     password: string,
     billingInfo: IBillingInfoModel,
     cards: ICardModel[],
-    transactions: { id: string }[]
+    transactions: { id: string }[],
+    comparePassword: (password: string) => Promise<boolean>
 }
 
 const billingInfoSchema = new Schema(
@@ -130,5 +132,19 @@ const clientSchema = new Schema(
         timestamps: true,
     }
 );
+
+clientSchema.pre<IClientModel>("save", async function (next) {
+    const user = this;
+    if (!user.isModified("password")) return next();
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(user.password, salt);
+    user.password = hash;
+    next();
+});
+
+clientSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
+};
 
 export default model<IClientModel>('Client', clientSchema);

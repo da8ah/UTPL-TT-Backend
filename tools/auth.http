@@ -28,6 +28,15 @@ Content-Type: application/json
 ### GET CLIENT BY USER
 GET {{api}}/{{user}}
 
+### LOGIN CLIENT
+POST {{api}}/signin
+Content-Type: application/json
+
+{
+  "user": "tiber",
+  "password": "tiber"
+}
+
 ###
 @isbn = 9780141988511
 
@@ -42,3 +51,27 @@ Content-Type: application/json
 
 ### DELETE BOOK
 DELETE {{api}}/{{isbn}}
+
+### CREATE ADMIN
+@admin=/api/admin
+
+###
+POST {{api}}{{admin}}/signup
+Content-Type: application/json
+
+{
+    "user": "tiber",
+    "name": "da8ah",
+    "email": "tiber@email.com",
+    "mobile": "+593000000001",
+    "password": "tiber"
+}
+
+### LOGIN ADMIN
+POST {{api}}{{admin}}/signin
+Content-Type: application/json
+
+{
+  "user": "tiber",
+  "password": "tiber"
+}

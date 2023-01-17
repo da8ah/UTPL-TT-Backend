@@ -1,36 +1,16 @@
-import CardTransaction from "../../../core/entities/CardTransaction";
 import Client from "../../../core/entities/Client";
-import User from "../../../core/entities/User";
 import IPersistenciaCuenta from "../../../core/ports/persistencia/IPersistenciaCuenta";
-import { ClientConverter, TransactionConverter } from "../../app/utils";
-import CardTransactionModel from "../models/CardTransactionModel";
+import { ClientConverter } from "../../app/utils";
 import ClientModel, { IClientModel } from "../models/ClientModel";
 
 export default class PersistenciaDeCuentas implements IPersistenciaCuenta {
 
-    public async buscarCuenta(client: Client): Promise<User> {
+    public async buscarCuenta(client: Client): Promise<Client> {
         try {
 
             let clientFound: IClientModel | null = null;
             clientFound = await ClientModel.findOne({ user: client.getUser() });
-            let clientToReturn: Client;
-            if (clientFound) {
-                clientToReturn = ClientConverter.modelToClient(clientFound);
-                let transactions: CardTransaction[] = [];
-                if (clientFound.transactions && clientFound.transactions.length > 0) {
-                    // TODO: Error: Cannot overwrite `Client` model once compiled.
-                    // Revisar implementar la Persistencia de Transacciones para obtener la data
-                    // clientFound.transactions.forEach(async (id) => {
-                    //     let transactionFound = await CardTransactionModel.findOne({ id });
-                    //     if (transactionFound) transactions.push(TransactionConverter.jsonToCardTransaction(transactionFound));
-                    // });
-
-                    // if (transactions.length > 0) clientToReturn.setTransactions(transactions);
-                }
-                return clientToReturn;
-            }
-
-            return new Client();
+            return (!clientFound) ? new Client() : ClientConverter.modelToClient(clientFound);
 
         } catch (error) {
             console.error(error);
@@ -40,10 +20,6 @@ export default class PersistenciaDeCuentas implements IPersistenciaCuenta {
 
     public async guardarCuentaNueva(client: Client): Promise<Client> {
         try {
-
-            let clientFound: IClientModel | null = null;
-            clientFound = await ClientModel.findOne({ user: client.getUser() });
-            if (clientFound) return client;
 
             const newClientModel: IClientModel = ClientConverter.clientToModel(client);
             let savedClient: IClientModel = await newClientModel.save();

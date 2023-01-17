@@ -54,4 +54,4 @@ const cardTransactionSchema = new Schema(
     }
 );
 
-export default model<ICardTransactionModel>('Client', cardTransactionSchema);
+export default model<ICardTransactionModel>('CardTransactions', cardTransactionSchema);

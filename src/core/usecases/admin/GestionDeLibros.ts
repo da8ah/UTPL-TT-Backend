@@ -6,7 +6,7 @@ export default class GestionDeLibros {
     public async crearLibro(stockBook: StockBook, iPersistenciaLibro: IPersistenciaLibro): Promise<StockBook> {
         const bookFound = await iPersistenciaLibro.buscarUnLibroByIsbn(stockBook);
         if (bookFound.getIsbn()) return stockBook;
-        return iPersistenciaLibro.guardarNuevoLibro(stockBook);
+        return iPersistenciaLibro.guardarLibroNuevo(stockBook);
     }
 
     // Two StockBooks required in case of ISBN update

@@ -1,10 +1,12 @@
 import { Request } from "express";
+import Admin from "../../core/entities/Admin";
 import BillingInfo from "../../core/entities/BillingInfo";
 import Card from "../../core/entities/Card";
 import CardTransaction from "../../core/entities/CardTransaction";
 import Client from "../../core/entities/Client";
 import StockBook from "../../core/entities/StockBook";
-import { ICardTransactionModel } from "../persistencia/models/CardTransactionModel";
+import AdminModel, { IAdminModel } from "../persistencia/models/AdminModel";
+import CardTransactionModel, { ICardTransactionModel } from "../persistencia/models/CardTransactionModel";
 import ClientModel, { IBillingInfoModel, ICardModel, IClientModel } from "../persistencia/models/ClientModel";
 import StockBookModel, { IStockBookModel } from "../persistencia/models/StockBookModel";
 
@@ -261,6 +263,89 @@ export class TransactionConverter {
             iCardTransactionModel.ownerName,
             iCardTransactionModel.cardNumber,
             iCardTransactionModel.expiryDate,
+        );
+    }
+
+    public static modelToCardTransaction(cardTransactionModel: ICardTransactionModel): CardTransaction {
+        return new CardTransaction(
+            cardTransactionModel.id,
+            cardTransactionModel.date,
+            Number.parseFloat(cardTransactionModel.payment),
+            Number.parseFloat(cardTransactionModel.change),
+            cardTransactionModel.ownerName,
+            cardTransactionModel.cardNumber,
+            cardTransactionModel.expiryDate
+        );
+    }
+
+    public static cardTransactionToModel(cardTransaction: CardTransaction): ICardTransactionModel {
+        return new CardTransactionModel(
+            {
+                id: cardTransaction.getId(),
+                date: cardTransaction.getDate(),
+                payment: cardTransaction.getPayment(),
+                change: cardTransaction.getChange(),
+                ownerName: cardTransaction.getOwnerName(),
+                cardNumber: cardTransaction.getCardNumber(),
+                expiryDate: cardTransaction.getExpiryDate()
+            }
+        );
+    }
+
+}
+
+export class AdminConverter {
+
+    public static adminToJSON(admin: Admin): JSON {
+        let json: any = {};
+        if (admin.getUser() != undefined) json["user"] = admin.getUser();
+        if (admin.getName() != undefined) json["name"] = admin.getName();
+        if (admin.getEmail() != undefined) json["email"] = admin.getEmail();
+        if (admin.getMobile() != undefined) json["mobile"] = admin.getMobile();
+        if (admin.getPassword() != undefined) json["password"] = admin.getPassword();
+        return json;
+    }
+
+    public static jsonToAdmin(req: Request): Admin {
+        const {
+            user,
+            name,
+            email,
+            mobile,
+            password
+        } = req.body;
+
+        const admin = new Admin(
+            user,
+            name,
+            email,
+            mobile,
+            password
+        );
+
+        return admin;
+    }
+
+    public static modelToAdmin(adminModel: IAdminModel): Admin {
+        const admin = new Admin(
+            adminModel.user,
+            adminModel.name,
+            adminModel.email,
+            adminModel.mobile,
+            adminModel.password
+        );
+        return admin;
+    }
+
+    public static adminToModel(admin: Admin): IAdminModel {
+        return new AdminModel(
+            {
+                user: admin.getUser(),
+                name: admin.getName(),
+                email: admin.getEmail(),
+                mobile: admin.getMobile(),
+                password: admin.getPassword()
+            }
         );
     }
 

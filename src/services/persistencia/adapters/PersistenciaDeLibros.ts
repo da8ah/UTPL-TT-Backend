@@ -30,7 +30,7 @@ export default class PersistenciaDeLibros implements IPersistenciaLibro {
         }
     }
 
-    public async guardarNuevoLibro(stockBook: StockBook): Promise<StockBook> {
+    public async guardarLibroNuevo(stockBook: StockBook): Promise<StockBook> {
         try {
 
             const newBookModel: IStockBookModel = BookConverter.bookToModel(stockBook);

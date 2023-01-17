@@ -1,21 +1,27 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import Client from '../../../core/entities/Client';
 import GestionDeAutenticacionClient from '../../../core/usecases/GestionDeAutenticacionClient';
+import config from '../../config/config';
 import PersistenciaDeCuentas from '../../persistencia/adapters/PersistenciaDeCuentas';
 import { ClientConverter } from '../utils';
 
 export default class AuthController {
 
-    // private createToken(user: IUser) {
-    //     return jwt.sign({ id: user.id, email: user.email }, config.jwtSecret, {
-    //         expiresIn: 900 // 15min
-    //     });
-    // }
+    private static createToken(client: Client) {
+        if (config.jwtSecret) {
+            return jwt.sign(
+                { user: client.getUser(), email: client.getEmail() },
+                config.jwtSecret,
+                { expiresIn: '7d' }
+            );
+        }
+    }
 
     public async signUp(req: Request, res: Response) {
         try {
-            const { email, password } = req.body;
-            if (!email || !password) return res.status(400).json({ msg: `No valid input!` });
+            const { user, password } = req.body;
+            if (!user || !password) return res.status(400).json({ msg: `No valid input!` });
 
             const newClient = ClientConverter.jsonToClient(req);
             const useCaseGestionDeAutenticacionClient = new GestionDeAutenticacionClient();
@@ -32,18 +38,18 @@ export default class AuthController {
 
     public async logIn(req: Request, res: Response) {
         try {
-            // const { email, password } = req.body;
-            // if (!email || !password) return res.status(400).json();
+            const { user, password } = req.body;
+            if (!user || !password) return res.status(400).json({ msg: `No valid input!` });
 
-            // const userFound = await UserModel.findOne({ email });
-            // if (!userFound) return res.status(404).json();
+            const client = ClientConverter.jsonToClient(req);
+            const useCaseGestionDeAutenticacionClient = new GestionDeAutenticacionClient();
+            const resultado = await useCaseGestionDeAutenticacionClient.iniciarSesion(client, new PersistenciaDeCuentas());
+            if (!resultado.getUser()) return res.status(404).json({ msg: `No valid input!` });
 
-            // const auth = await userFound.comparePassword(password);
-            // if (!auth) return res.status(400).json();
+            const tokenCreated = AuthController.createToken(resultado);
 
-            // const tokenCreated = createToken(userFound);
+            return res.status(200).cookie('jwt', tokenCreated, { expires: new Date(Date.now() + 900000), httpOnly: true });
 
-            // return res.status(200).cookie('jwt', tokenCreated, { expires: new Date(Date.now() + 900000), httpOnly: true, path: "payment" }).json({ jwt: tokenCreated });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ msg: `Server internal error!` });
@@ -51,10 +57,12 @@ export default class AuthController {
     }
 
 
-    public async logOut(req: Request, res: Response) {
+    public async logOut(req: Request, res: Response, next: NextFunction) {
         try {
-            // const scripts = [{ script: '/js/signin.js' }]
-            // return res.status(200).render('signin', { title: "Sign In", scripts });
+            req.logout(function (err) {
+                if (err) { return next(err); }
+                res.redirect('/');
+            });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ msg: `Server internal error!` });
