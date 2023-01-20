@@ -22,12 +22,6 @@ Content-Type: application/json
     }
 }
 
-###
-@user = tiber
-
-### GET CLIENT BY USER
-GET {{api}}/{{user}}
-
 ### LOGIN CLIENT
 POST {{api}}/signin
 Content-Type: application/json
@@ -36,21 +30,6 @@ Content-Type: application/json
   "user": "tiber",
   "password": "tiber"
 }
-
-###
-@isbn = 9780141988511
-
-### UPDATE BOOK
-PUT {{api}}/{{isbn}}
-Content-Type: application/json
-
-{
-  "description": "THE MULTI-MILLION COPY BESTSELLER",
-  "hasIva": false
-}
-
-### DELETE BOOK
-DELETE {{api}}/{{isbn}}
 
 ### CREATE ADMIN
 @admin=/api/admin

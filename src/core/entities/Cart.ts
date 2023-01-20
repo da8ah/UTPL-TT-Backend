@@ -1,57 +1,74 @@
 import ToBuyBook from "./ToBuyBook";
 
 export default class Cart {
-    private discountCalc: string | undefined = undefined;
-    private ivaCalc: string | undefined = undefined;
-    private subtotal: string | undefined = undefined;
-    private totalPrice: string | undefined = undefined;
+    private discountCalc: number | undefined = undefined;
+    private ivaCalc: number | undefined = undefined;
+    private subtotal: number | undefined = undefined;
+    private totalPrice: number | undefined = undefined;
     private toBuyBooks: ToBuyBook[] | undefined = undefined;
 
     constructor(
-        discountCalc: string,
-        ivaCalc: string,
-        subtotal: string,
-        totalPrice: string,
-        toBuyBooks: ToBuyBook[]
-    ) { }
+        discountCalc?: number,
+        ivaCalc?: number,
+        subtotal?: number,
+        totalPrice?: number,
+        toBuyBooks?: ToBuyBook[]
+    ) {
+        this.discountCalc = discountCalc;
+        this.ivaCalc = ivaCalc;
+        this.subtotal = subtotal;
+        this.totalPrice = totalPrice;
+        this.toBuyBooks = toBuyBooks;
+        this.calculate();
+    }
 
-    public getDiscountCalc(): string | undefined {
+    public calculate() {
+        const books = this.getToBuyBooks();
+        if (books != undefined) {
+            let discountAcc = 0;
+            let ivaAcc = 0;
+            let subtotal = 0;
+            let totalPrice = 0;
+            for (const book of books) {
+                // Calc with all quantities
+                const cant = book.getCant();
+                if (cant != undefined) {
+                    const discount = book.getDiscountedAmount();
+                    if (discount != undefined) discountAcc = discountAcc + discount * cant;
+                    const iva = book.getIvaAmount();
+                    if (iva != undefined) ivaAcc = ivaAcc + iva * cant;
+
+                    const grossPricePerUnit = book.getGrossPricePerUnit();
+                    if (grossPricePerUnit != undefined) subtotal = subtotal + grossPricePerUnit * cant;
+                    const priceCalcPerUnit = book.getPriceCalcPerUnit();
+                    if (priceCalcPerUnit != undefined) totalPrice = totalPrice + priceCalcPerUnit * cant;
+                }
+            }
+
+            this.discountCalc = discountAcc;
+            this.ivaCalc = ivaAcc;
+            this.subtotal = subtotal;
+            this.totalPrice = totalPrice;
+        }
+    }
+
+    public getDiscountCalc(): number | undefined {
         return this.discountCalc;
     }
 
-    public setDiscountCalc(discountCalc: string): void {
-        this.discountCalc = discountCalc;
-    }
-
-    public getIvaCalc(): string | undefined {
+    public getIvaCalc(): number | undefined {
         return this.ivaCalc;
     }
 
-    public setIvaCalc(ivaCalc: string): void {
-        this.ivaCalc = ivaCalc;
-    }
-
-    public getSubtotal(): string | undefined {
+    public getSubtotal(): number | undefined {
         return this.subtotal;
     }
 
-    public setSubtotal(subtotal: string): void {
-        this.subtotal = subtotal;
-    }
-
-    public getTotalPrice(): string | undefined {
+    public getTotalPrice(): number | undefined {
         return this.totalPrice;
-    }
-
-    public setTotalPrice(totalPrice: string): void {
-        this.totalPrice = totalPrice;
     }
 
     public getToBuyBooks(): ToBuyBook[] | undefined {
         return this.toBuyBooks;
-    }
-
-    public setToBuyBooks(toBuyBooks: ToBuyBook[]): void {
-        this.toBuyBooks = toBuyBooks;
     }
 }

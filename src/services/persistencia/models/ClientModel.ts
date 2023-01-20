@@ -15,6 +15,8 @@ export interface ICardModel extends Document {
     cardNumber: string,
     code: string,
     expiryDate: string
+    compareCardNumber: (cardNumber: string) => Promise<boolean>,
+    compareCode: (code: string) => Promise<boolean>
 }
 
 export interface IClientModel extends Document {
@@ -86,7 +88,6 @@ const cardSchema = new Schema(
             required: true,
             trim: true
         }
-
     }
 );
 
@@ -118,11 +119,19 @@ const clientSchema = new Schema(
             type: String,
             required: true
         },
-        billingInfo: { type: billingInfoSchema },
-        cards: [{ types: cardSchema }],
+        billingInfo: {
+            _id: false,
+            type: billingInfoSchema
+        },
+        cards: [{
+            _id: false,
+            types: cardSchema
+        }],
         transactions: [{
+            _id: false,
             id: {
                 type: String,
+                required: true,
                 trim: true
             }
         }]
@@ -132,6 +141,25 @@ const clientSchema = new Schema(
         timestamps: true,
     }
 );
+
+cardSchema.pre<ICardModel>("save", async function (next) {
+    const card = this;
+    if (!card.isModified("cardNumber") && !card.isModified("code")) return next();
+
+    const salt = await bcrypt.genSalt(10);
+    const hashCardNumber = await bcrypt.hash(card.cardNumber, salt);
+    const hashCode = await bcrypt.hash(card.code, salt);
+    card.cardNumber = hashCardNumber;
+    card.code = hashCode;
+    next();
+});
+
+cardSchema.methods.compareCardNumber = async function (cardNumber: string): Promise<boolean> {
+    return await bcrypt.compare(cardNumber, this.cardNumber);
+};
+cardSchema.methods.compareCode = async function (code: string): Promise<boolean> {
+    return await bcrypt.compare(code, this.code);
+};
 
 clientSchema.pre<IClientModel>("save", async function (next) {
     const user = this;

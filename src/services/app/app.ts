@@ -1,13 +1,13 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
+import * as passportMiddleware from './middlewares/passport';
 
 import config from '../config/config';
-import booksRouter from './routes/books.routes';
-import authRouter from './routes/auth.routes';
-import adminsRouter from './routes/admin.routes';
-import * as passportMiddleware from './middlewares/passport';
+import adminRouter from './routes/admin.routes';
+import clientRouter from './routes/client.routes';
+import homeRouter from './routes/home.routes';
 
 const app = express();
 
@@ -23,9 +23,9 @@ passport.use(passportMiddleware.authClient);
 passport.use(passportMiddleware.authAdmin);
 
 // Routes
-app.use(booksRouter);
-app.use(authRouter);
-app.use(adminsRouter);
+app.use(homeRouter);
+app.use(clientRouter);
 // app.use(paymentRouter);
+app.use(adminRouter);
 
 export default app;

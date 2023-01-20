@@ -1,28 +1,36 @@
 import { Router } from 'express';
 import passport from 'passport';
 import AdminController from '../controllers/admin.controller';
+import BooksController from '../controllers/books.controller';
 
-const adminsRouter = Router();
+const adminRouter = Router();
+const adminController = new AdminController();
 
 export const API_PATH = "/api/admin";
 
-const adminsController = new AdminController();
+adminRouter.post(API_PATH + "/login", adminController.logIn);
+adminRouter.post(API_PATH + "/logout", adminController.logOut);
+adminRouter.post(API_PATH + "/newuser",
+    passport.authenticate('jwt', { session: false, failureRedirect: API_PATH + "/signin" }),
+    adminController.signUp);
+adminRouter.put(API_PATH + "/:user",
+    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+    adminController.updateAdmin);
+adminRouter.delete(API_PATH + "/:user",
+    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+    adminController.deleteAdmin);
 
+const booksRouter = Router();
+const booksController = new BooksController();
 
-adminsRouter.post(API_PATH + "/signup", adminsController.signUp);
-adminsRouter.post(API_PATH + "/signin", adminsController.logIn);
-adminsRouter.post(API_PATH + "/logout", adminsController.logOut);
+booksRouter.post(API_PATH + "/books",
+    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+    booksController.createBook);
+booksRouter.put(API_PATH + "/books/:isbn",
+    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+    booksController.updateBook);
+booksRouter.delete(API_PATH + "/books/:isbn",
+    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+    booksController.deleteBook);
 
-// adminsRouter.post(API_PATH,
-//     passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
-//     adminsController.createAdmin);
-
-// adminsRouter.put(API_PATH + "/:isbn",
-//     passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
-//     adminsController.updateAdmin);
-
-// adminsRouter.delete(API_PATH + "/:isbn",
-//     passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
-//     adminsController.deleteAdmin);
-
-export default adminsRouter;
+export default adminRouter;

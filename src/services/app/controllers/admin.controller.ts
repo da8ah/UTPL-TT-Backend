@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import Admin from '../../../core/entities/Admin';
-import GestionDeAutenticacionAdmin from '../../../core/usecases/admin/GestionDeAutenticacionAdmin';
+import GestionDeAdmin from '../../../core/usecases/admin/GestionDeAdmin';
 import config from '../../config/config';
 import PersistenciaDeAdmin from '../../persistencia/adapters/PersistenciaDeAdmin';
 import { AdminConverter } from '../utils';
@@ -24,8 +24,7 @@ export default class AdminController {
             if (!user || !password) return res.status(400).json({ msg: `No valid input!` });
 
             const newAdmin = AdminConverter.jsonToAdmin(req);
-            const useCaseGestionDeAutenticacionAdmin = new GestionDeAutenticacionAdmin();
-            const resultado = await useCaseGestionDeAutenticacionAdmin.crearCuenta(newAdmin, new PersistenciaDeAdmin());
+            const resultado = await new GestionDeAdmin().crearCuenta(newAdmin, new PersistenciaDeAdmin());
             if (resultado === newAdmin) return res.status(303).json({ msg: `${newAdmin.getUser()} already exists!` });
             if (!resultado.getUser()) return res.status(400).json({ msg: `${newAdmin.getUser()} was not saved!` });
             return res.status(201).json({ msg: `${resultado.getUser()} saved!` });
@@ -42,13 +41,12 @@ export default class AdminController {
             if (!user || !password) return res.status(400).json({ msg: `No valid input!` });
 
             const admin = AdminConverter.jsonToAdmin(req);
-            const useCaseGestionDeAutenticacionAdmin = new GestionDeAutenticacionAdmin();
-            const resultado = await useCaseGestionDeAutenticacionAdmin.iniciarSesion(admin, new PersistenciaDeAdmin());
+            const resultado = await new GestionDeAdmin().iniciarSesion(admin, new PersistenciaDeAdmin());
             if (!resultado.getUser()) return res.status(404).json({ msg: `No valid input!` });
 
             const tokenCreated = AdminController.createToken(resultado);
 
-            return res.status(200).cookie('jwt', tokenCreated, { expires: new Date(Date.now() + 900000), httpOnly: true });
+            return res.status(200).cookie('jwt', tokenCreated, { expires: new Date(Date.now() + 900000), httpOnly: true }).send({ jwt: `${tokenCreated}` });
 
         } catch (error) {
             console.error(error);
@@ -63,6 +61,35 @@ export default class AdminController {
                 if (err) { return next(err); }
                 res.redirect('/');
             });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ msg: `Server internal error!` });
+        }
+    }
+
+    public async updateAdmin(req: Request, res: Response) {
+        try {
+
+            const adminToSearch = new Admin(req.params.user);
+            const adminToUpdate = AdminConverter.jsonToAdmin(req);
+            const resultado = await new GestionDeAdmin().actualizarCuenta(adminToSearch, adminToUpdate, new PersistenciaDeAdmin());
+            if (!resultado.getUser()) return res.status(404).json({ msg: `${adminToSearch.getUser()} was not found!` });
+            return res.status(200).json({ msg: `${resultado.getUser()} updated!` });
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ msg: `Server internal error!` });
+        }
+    }
+
+    public async deleteAdmin(req: Request, res: Response) {
+        try {
+
+            const adminToDelete = new Admin(req.params.user);
+            const resultado = await new GestionDeAdmin().eliminarCuenta(adminToDelete, new PersistenciaDeAdmin());
+            if (!resultado.getUser()) return res.status(404).json({ msg: `${adminToDelete.getUser()} was not found!` });
+            return res.status(200).json({ msg: `${resultado.getUser()} deleted!` });
+
         } catch (error) {
             console.error(error);
             return res.status(500).json({ msg: `Server internal error!` });

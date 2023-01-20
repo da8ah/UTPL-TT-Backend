@@ -7,12 +7,11 @@ export default abstract class Transaction {
     private change: number | undefined = undefined;
     private cart: Cart | undefined = undefined;
 
-    constructor(id?: string, date?: string, payment?: number, change?: number, cart?: Cart) {
+    constructor(id?: string, date?: string, payment?: number, change?: number) {
         this.id = id;
         this.date = date;
         this.payment = payment;
         this.change = change;
-        this.cart = cart;
     }
 
     public getId(): string | undefined {

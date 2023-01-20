@@ -5,9 +5,9 @@ import AdminModel from '../../persistencia/models/AdminModel';
 import ClientModel from '../../persistencia/models/ClientModel';
 
 const tokenExtractor = function (req: Request) {
-    let bearer = null;
-    if (req && req.headers.authorization) bearer = req.headers.authorization.split(" ")[1];
-    return bearer;
+    let authorization = null;
+    if (req && req.headers.authorization) authorization = req.headers.authorization;
+    return authorization;
 };
 
 const options: StrategyOptions = {
@@ -18,7 +18,7 @@ const options: StrategyOptions = {
 export const authClient = new Strategy(options, async (payload, done) => {
     try {
 
-        const user = await ClientModel.findOne(payload.user);
+        const user = await ClientModel.findOne({ user: payload.user });
         if (!user) return done(null, false);
         return done(null, user);
 
@@ -30,7 +30,7 @@ export const authClient = new Strategy(options, async (payload, done) => {
 export const authAdmin = new Strategy(options, async (payload, done) => {
     try {
 
-        const user = await AdminModel.findOne(payload.user);
+        const user = await AdminModel.findOne({ user: payload.user });
         if (!user) return done(null, false);
         return done(null, user);
 

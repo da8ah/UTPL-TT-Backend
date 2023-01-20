@@ -1,0 +1,98 @@
+###
+@port = 8080
+@api = http://localhost:{{port}}
+
+### CLIENT
+@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsImlhdCI6MTY3NDE2OTYzMSwiZXhwIjoxNjc0Nzc0NDMxfQ._xfUgjw9v_ArkuD5Os0lveWLMwS-xlfG6JoBhUa1Vcs
+@clients=/api/clients
+@user=tiber
+
+### UPDATE CLIENT
+PUT {{api}}{{clients}}/{{user}}
+Authorization: {{auth}}
+Content-Type: application/json
+
+{
+    "billingInfo": {
+        "toWhom": "Danilo Ochoa Hidalgo"
+    }
+}
+
+### DELETE CLIENT
+DELETE {{api}}{{clients}}/{{user}}
+Authorization: {{auth}}
+
+### TRANSACTIONS
+@transactions=/transactions
+
+### RETRIEVE ALL TRANSACTIONS OF A CLIENT
+GET {{api}}{{clients}}{{transactions}}/{{user}}
+Authorization: {{auth}}
+
+### CREATE NEW TRANSACTION AND ADD TO THE CLIENT
+POST {{api}}{{clients}}{{transactions}}
+Authorization: {{auth}}
+Content-Type: application/json
+
+{
+    "user": "tiber",
+    "name": "da8ah",
+    "email": "tiber@email.com",
+    "mobile": "+593000000001",
+    "cards": [
+        {
+            "ownerName": "Danilo Ochoa Hidalgo",
+            "cardNumber": "1234567890101",
+            "expiryDate": "12/23"
+        }
+    ],
+    "transactions": {
+        "date": "1/19/2023",
+        "payment": 25,
+        "change": 0,
+        "cart": {
+            "discountCalc": 2.5,
+            "ivaCalc": 3,
+            "subtotal": 75.5,
+            "totalPrice": 78,
+            "toBuyBooks": [
+                {
+                    "isbn": "9780141988511",
+                    "imgRef": "https://azure.blob.url",
+                    "title": "12 Rules for Life: An Antidote to Chaos",
+                    "author": "Peterson, Jordan B.",
+                    "releaseDate": "16/01/2018",
+                    "grossPricePerUnit": 25,
+                    "inOffer": false,
+                    "discountPercentage": 0,
+                    "hasIva": false,
+                    "ivaPercentage": 0,
+                    "discountedAmount": 0,
+                    "ivaAmount": 0,
+                    "priceWithDiscount": 25,
+                    "priceWithIva": 25,
+                    "cant": 1,
+                    "priceCalcPerUnit": 25
+                },
+                {
+                    "isbn": "9780141988512",
+                    "imgRef": "https://azure.blob.url",
+                    "title": "12 More Rules for Life: Beyond Order",
+                    "author": "Peterson, Jordan B.",
+                    "releaseDate": "16/01/2020",
+                    "grossPricePerUnit": 25,
+                    "inOffer": true,
+                    "discountPercentage": 10,
+                    "hasIva": true,
+                    "ivaPercentage": 12,
+                    "discountedAmount": 2.5,
+                    "ivaAmount": 3,
+                    "priceWithDiscount": 22.5,
+                    "priceWithIva": 28,
+                    "cant": 2,
+                    "priceCalcPerUnit": 25.5
+                }
+            ]
+        }
+    }
+}

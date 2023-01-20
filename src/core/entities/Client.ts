@@ -32,4 +32,5 @@ export default class Client extends User {
     public setTransactions(value: Transaction[]) {
         this.transactions = value;
     }
+    
 }
