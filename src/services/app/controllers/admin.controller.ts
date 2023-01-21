@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import Admin from '../../../core/entities/Admin';
 import GestionDeAdmin from '../../../core/usecases/admin/GestionDeAdmin';
+import GestionDeTransacciones from '../../../core/usecases/admin/GestionDeTransacciones';
 import config from '../../config/config';
 import PersistenciaDeAdmin from '../../persistencia/adapters/PersistenciaDeAdmin';
+import PersistenciaDeTransacciones from '../../persistencia/adapters/PersistenciaDeTransacciones';
 import { AdminConverter } from '../utils';
 
 export default class AdminController {
@@ -11,11 +13,23 @@ export default class AdminController {
     private static createToken(admin: Admin) {
         if (config.jwtSecret) {
             return jwt.sign(
-                { user: admin.getUser(), email: admin.getEmail() },
+                { user: admin.getUser(), email: admin.getEmail(), role: 'Admin' },
                 config.jwtSecret,
-                { expiresIn: '7d' }
+                { expiresIn: '3d' }
             );
         }
+    }
+
+    public async roleVerification(req: Request, res: Response, next: NextFunction) {
+        let authorization;
+        if (req && req.headers.authorization) authorization = req.headers.authorization;
+        let tokenDecoded;
+        if (authorization != undefined) tokenDecoded = jwt.decode(authorization);
+        if (tokenDecoded != undefined) {
+            const role = JSON.parse(JSON.stringify(tokenDecoded)).role;
+            if (role !== "Admin") return res.status(401).redirect("/signin");
+        }
+        next();
     }
 
     public async signUp(req: Request, res: Response) {
@@ -89,6 +103,18 @@ export default class AdminController {
             const resultado = await new GestionDeAdmin().eliminarCuenta(adminToDelete, new PersistenciaDeAdmin());
             if (!resultado.getUser()) return res.status(404).json({ msg: `${adminToDelete.getUser()} was not found!` });
             return res.status(200).json({ msg: `${resultado.getUser()} deleted!` });
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ msg: `Server internal error!` });
+        }
+    }
+
+    public async getAllTransactions(req: Request, res: Response) {
+        try {
+
+            const resultado = await new GestionDeTransacciones().listarTodasLasTransacciones(new PersistenciaDeTransacciones());
+            return res.status(200).json(resultado);
 
         } catch (error) {
             console.error(error);

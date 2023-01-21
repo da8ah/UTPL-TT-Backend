@@ -1,0 +1,15 @@
+###
+@port = 8080
+@api = http://localhost:{{port}}
+
+### CLIENT
+# @auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsImlhdCI6MTY3NDE2OTYzMSwiZXhwIjoxNjc0Nzc0NDMxfQ._xfUgjw9v_ArkuD5Os0lveWLMwS-xlfG6JoBhUa1Vcs
+@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY3NDI1ODc3NCwiZXhwIjoxNjc0NTE3OTc0fQ.7Etxlj0zYbTNL6w-CcNY2-jkBzfQNv9X6dKJjpHl5Q4
+@admin=/api/admin
+@user=tiber
+### TRANSACTIONS
+@transactions=/transactions
+
+### RETRIEVE ALL TRANSACTIONS
+GET {{api}}{{admin}}{{transactions}}
+Authorization: {{auth}}

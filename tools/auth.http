@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ### LOGIN ADMIN
-POST {{api}}{{admin}}/signin
+POST {{api}}{{admin}}/login
 Content-Type: application/json
 
 {

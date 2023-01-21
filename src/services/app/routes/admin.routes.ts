@@ -5,32 +5,52 @@ import BooksController from '../controllers/books.controller';
 
 const adminRouter = Router();
 const adminController = new AdminController();
+const passportAuth = passport.authenticate('jwt', { session: false, failureRedirect: '/signin' });
 
 export const API_PATH = "/api/admin";
 
+// AUTH
 adminRouter.post(API_PATH + "/login", adminController.logIn);
 adminRouter.post(API_PATH + "/logout", adminController.logOut);
 adminRouter.post(API_PATH + "/newuser",
-    passport.authenticate('jwt', { session: false, failureRedirect: API_PATH + "/signin" }),
+    passportAuth,
     adminController.signUp);
+
+// ADMIN
 adminRouter.put(API_PATH + "/:user",
-    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+    adminController.roleVerification,
+    passportAuth,
     adminController.updateAdmin);
 adminRouter.delete(API_PATH + "/:user",
-    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+    adminController.roleVerification,
+    passportAuth,
     adminController.deleteAdmin);
 
-const booksRouter = Router();
 const booksController = new BooksController();
 
-booksRouter.post(API_PATH + "/books",
-    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+// BOOKS
+// Crear nuevo Book
+adminRouter.post(API_PATH + "/books",
+    adminController.roleVerification,
+    passportAuth,
     booksController.createBook);
-booksRouter.put(API_PATH + "/books/:isbn",
-    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+// Actualizar Book
+adminRouter.put(API_PATH + "/books/:isbn",
+    adminController.roleVerification,
+    passportAuth,
     booksController.updateBook);
-booksRouter.delete(API_PATH + "/books/:isbn",
-    passport.authenticate('jwt', { session: false, failureRedirect: '/signin' }),
+// Eliminar Book
+adminRouter.delete(API_PATH + "/books/:isbn",
+    adminController.roleVerification,
+    passportAuth,
     booksController.deleteBook);
+
+// TRANSACTIONS
+const transactionsController = adminController;
+
+adminRouter.get(API_PATH + "/transactions",
+    adminController.roleVerification,
+    passportAuth,
+    transactionsController.getAllTransactions);
 
 export default adminRouter;

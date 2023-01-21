@@ -327,7 +327,7 @@ export class TransactionConverter {
         return client;
     }
 
-    public static modelToCardTransaction(cardTransactionModel: ICardTransactionModel): Client {
+    public static modelToCardTransactionWithClient(cardTransactionModel: ICardTransactionModel): Client {
         const books: ToBuyBook[] = cardTransactionModel.booksAcquired.map((book) => new ToBuyBook(
             book.isbn,
             book.imgRef,
@@ -377,7 +377,7 @@ export class TransactionConverter {
         return client;
     }
 
-    public static cardTransactionToModel(client: Client): ICardTransactionModel {
+    public static cardTransactionWithClientToModel(client: Client): ICardTransactionModel {
         const transactions = client.getTransactions();
         const cards = client.getCards();
         if (transactions != undefined && cards != undefined) {
@@ -413,6 +413,39 @@ export class TransactionConverter {
             }
         }
         return new CardTransactionModel();
+    }
+
+    public static modelToCardTransaction(cardTransactionModel: ICardTransactionModel): CardTransaction {
+        const books: ToBuyBook[] = cardTransactionModel.booksAcquired.map((book) => new ToBuyBook(
+            book.isbn,
+            book.imgRef,
+            book.title,
+            book.author,
+            book.releaseDate,
+            book.grossPricePerUnit,
+            book.inOffer,
+            book.discountPercentage,
+            book.hasIva,
+            book.cant
+        ));
+
+        const cart = new Cart(
+            cardTransactionModel.discountCalc,
+            cardTransactionModel.ivaCalc,
+            cardTransactionModel.subtotal,
+            cardTransactionModel.totalPrice,
+            books
+        );
+
+        const cardTransaction = new CardTransaction(
+            cardTransactionModel.id,
+            cardTransactionModel.date,
+            cardTransactionModel.payment,
+            cardTransactionModel.change,
+            cart
+        );
+
+        return cardTransaction;
     }
 
 }

@@ -1,5 +1,6 @@
 import CardTransaction from "../../../core/entities/CardTransaction";
 import Client from "../../../core/entities/Client";
+import Transaction from "../../../core/entities/Transaction";
 import IPersistenciaTransacciones from "../../../core/ports/persistencia/IPersistenciaTransacciones";
 import { TransactionConverter } from "../../app/utils";
 import CardTransactionModel, { ICardTransactionModel } from "../models/CardTransactionModel";
@@ -48,10 +49,10 @@ export default class PersistenciaDeTransacciones implements IPersistenciaTransac
             const clientFound = await new PersistenciaDeCuentas().buscarCuenta(client);
             if (clientFound.getUser() != undefined) {
                 // Save Transaction
-                const newTransaction: ICardTransactionModel = TransactionConverter.cardTransactionToModel(client);
+                const newTransaction: ICardTransactionModel = TransactionConverter.cardTransactionWithClientToModel(client);
                 let savedTransaction: ICardTransactionModel | null = null;
                 savedTransaction = await newTransaction.save();
-                const clientWithSavedTransaction = TransactionConverter.modelToCardTransaction(savedTransaction);
+                const clientWithSavedTransaction = TransactionConverter.modelToCardTransactionWithClient(savedTransaction);
                 const transactions = clientWithSavedTransaction.getTransactions(); // One transaction in [0]
                 // Save relation Client-Transaction in Client
                 if (transactions != undefined && transactions.length > 0) {
@@ -79,7 +80,7 @@ export default class PersistenciaDeTransacciones implements IPersistenciaTransac
                 for (const transaction of transactionsFound) {
                     const cardTransaction = await CardTransactionModel.findOne({ id: transaction.id });
                     if (cardTransaction != undefined) {
-                        const clientReturned = TransactionConverter.modelToCardTransaction(cardTransaction);
+                        const clientReturned = TransactionConverter.modelToCardTransactionWithClient(cardTransaction);
                         const transactionReturned = clientReturned.getTransactions();
                         if (transactionReturned != undefined) transactionsToReturn.push(transactionReturned[0]);
                     }
@@ -93,6 +94,18 @@ export default class PersistenciaDeTransacciones implements IPersistenciaTransac
         } catch (error) {
             console.error(error);
             return new Client();
+        }
+    }
+
+    public async consultarTodasLasTransacciones(): Promise<Transaction[]> {
+        try {
+
+            let transactions: ICardTransactionModel[] = await CardTransactionModel.find();
+            return (!transactions) ? [] : transactions.map((transactionModel) => TransactionConverter.modelToCardTransaction(transactionModel));
+
+        } catch (error) {
+            console.error(error);
+            return [];
         }
     }
 
