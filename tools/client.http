@@ -22,6 +22,8 @@ Content-Type: application/json
 DELETE {{api}}{{clients}}/{{user}}
 Authorization: {{auth}}
 
+
+
 ### TRANSACTIONS
 @transactions=/transactions
 

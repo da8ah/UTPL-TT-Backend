@@ -2,11 +2,76 @@
 @port = 8080
 @api = http://localhost:{{port}}
 
-### CLIENT
-# @auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsImlhdCI6MTY3NDE2OTYzMSwiZXhwIjoxNjc0Nzc0NDMxfQ._xfUgjw9v_ArkuD5Os0lveWLMwS-xlfG6JoBhUa1Vcs
-@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY3NDI1ODc3NCwiZXhwIjoxNjc0NTE3OTc0fQ.7Etxlj0zYbTNL6w-CcNY2-jkBzfQNv9X6dKJjpHl5Q4
+### ADMIN
+@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY3NDU0MTM0NiwiZXhwIjoxNjc0ODAwNTQ2fQ.ajdx379oXCSIwqUvBAsh9ujaNohdZYAha49QbbmNUo0
 @admin=/api/admin
 @user=tiber
+
+### LOGIN ADMIN
+POST {{api}}{{admin}}/login
+Content-Type: application/json
+
+{
+  "user": "tiber",
+  "password": "tiber"
+}
+
+### CREATE ADMIN
+POST {{api}}{{admin}}/newuser
+Authorization: {{auth}}
+Content-Type: application/json
+
+{
+    "user": "tiber",
+    "name": "da8ah",
+    "email": "tiber@email.com",
+    "mobile": "+593000000001",
+    "password": "tiber"
+}
+
+
+
+### CREATE BOOK
+POST {{api}}
+Content-Type: application/json
+
+{
+  "isbn": "9780141988511",
+  "imgRef": "https://azure.blob.url",
+  "title": "12 Rules for Life: An Antidote to Chaos",
+  "author": "Peterson, Jordan B.",
+  "releaseDate": "16/01/2018",
+  "grossPricePerUnit": 25,
+  "inOffer": true,
+  "discountPercentage": 25,
+  "hasIva": false,
+  "ivaPercentage": 0,
+  "createdDate": "10/01/2023",
+  "description": "JBP's BestSeller",
+  "stock": 100,
+  "visible": true,
+  "recommended": true,
+  "bestSeller": true,
+  "recent": false
+}
+
+###
+@isbn = 9780141988511
+
+### UPDATE BOOK
+PUT {{api}}/{{isbn}}
+Content-Type: application/json
+
+{
+  "description": "THE MULTI-MILLION COPY BESTSELLER",
+  "hasIva": false
+}
+
+### DELETE BOOK
+DELETE {{api}}/{{isbn}}
+
+
+
 ### TRANSACTIONS
 @transactions=/transactions
 

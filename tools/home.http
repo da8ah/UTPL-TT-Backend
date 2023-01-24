@@ -1,0 +1,43 @@
+###
+@port = 8080
+@api = http://localhost:{{port}}/api/books
+
+### LOGIN CLIENT
+POST {{api}}/signin
+Content-Type: application/json
+
+{
+  "user": "tiber",
+  "password": "tiber"
+}
+
+### CREATE CLIENT
+POST {{api}}/signup
+Content-Type: application/json
+
+{
+    "user": "tiber",
+    "name": "da8ah",
+    "email": "tiber@email.com",
+    "mobile": "+593000000001",
+    "password": "tiber",
+    "billingInfo": {
+      "toWhom": "tiber",
+      "ci": "1000000001",
+      "provincia": "Loja",
+      "ciudad": "Loja",
+      "numCasa": "000",
+      "calles": "Principal y Secundaria"
+    }
+}
+
+
+
+### GET ALL BOOKS
+GET {{api}}
+
+###
+@search = bestseller
+
+### GET BOOK BY STRING
+GET {{api}}/{{search}}
