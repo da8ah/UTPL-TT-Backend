@@ -10,9 +10,9 @@ export default class ClientController {
 		try {
 			const clientToSearch = new Client(req.params.user);
 			const clientToUpdate = ClientConverter.jsonToClient(req);
-			if (InputValidator.validateUser(clientToUpdate)) return res.status(400).json({ msg: "No valid input!" });
+			if (!InputValidator.validateUserToUpdate(clientToUpdate)) return res.status(400).json({ msg: "No valid input!" });
 			if (clientToUpdate.getBillingInfo()?.getToWhom()) {
-				if (InputValidator.validateBillingInfo(clientToUpdate.getBillingInfo() || new BillingInfo()))
+				if (!InputValidator.validateBillingInfoToUpdate(clientToUpdate.getBillingInfo() || new BillingInfo()))
 					return res.status(400).json({ msg: "No valid input!" });
 			}
 

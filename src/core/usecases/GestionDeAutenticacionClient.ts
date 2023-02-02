@@ -23,4 +23,14 @@ export default class GestionDeAutenticacionClient implements IGestionDeAutentica
 		}
 		return new Client();
 	}
+
+	public async obtenerCuentaPorToken(client: Client, iPersistenciaCuenta: IPersistenciaCuenta): Promise<Client> {
+		const clientFound = ClientConverter.clientToModel((await iPersistenciaCuenta.buscarCuenta(client)) as Client);
+		if (clientFound) {
+			const clientAuthed = ClientConverter.modelToClient(clientFound);
+			clientAuthed.setPassword("");
+			return clientAuthed;
+		}
+		return new Client();
+	}
 }

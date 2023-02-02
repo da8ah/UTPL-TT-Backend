@@ -146,7 +146,7 @@ export class BookConverter {
 }
 
 export class ClientConverter {
-	private static billingInfoToJSON(billingInfo: BillingInfo): JSON {
+	public static billingInfoToJSON(billingInfo: BillingInfo): JSON {
 		let json: any = {};
 		if (billingInfo.getToWhom() != undefined)
 			json["toWhom"] = billingInfo.getToWhom();
@@ -162,7 +162,7 @@ export class ClientConverter {
 		return json;
 	}
 
-	private static cardToJSON(card: Card): JSON {
+	public static cardToJSON(card: Card): JSON {
 		let json: any = {};
 		if (card.getOwnerName() != undefined)
 			json["ownerName"] = card.getOwnerName();
@@ -182,21 +182,6 @@ export class ClientConverter {
 		if (client.getMobile() != undefined) json["mobile"] = client.getMobile();
 		if (client.getPassword() != undefined)
 			json["password"] = client.getPassword();
-
-		const billingInfo = client.getBillingInfo();
-		if (billingInfo != undefined)
-			json["billingInfo"] = this.billingInfoToJSON(billingInfo);
-		const cards = client.getCards();
-		if (cards != undefined)
-			json["cards"] = cards.map((card) => this.cardToJSON(card));
-		const transactions = client.getTransactions();
-		if (transactions != undefined)
-			json["transactions"] = transactions.map((transaction) =>
-				TransactionConverter.cardTransactionToJSON(
-					transaction as CardTransaction,
-				),
-			);
-
 		return json;
 	}
 
@@ -500,7 +485,7 @@ export class AdminConverter {
 
 export class InputValidator {
 
-	public static validateStockBook(book: StockBook): boolean {
+	public static validateNewStockBook(book: StockBook): boolean {
 		const isbnPattern = /^(\d{13}|\d{10})$/;
 		const imgRefPattern = /^(https:\/\/)[\w+\.]+(png|jpg)$/;
 		const titlePattern = /\w{1,10}/;
@@ -530,6 +515,36 @@ export class InputValidator {
 		if (typeof book.isRecent() !== "boolean") return false;
 		return true;
 	}
+	public static validateStockBookToUpdate(book: StockBook): boolean {
+		const isbnPattern = /^(\d{13}|\d{10})$/;
+		const imgRefPattern = /^(https:\/\/)[\w+\.]+(png|jpg)$/;
+		const titlePattern = /\w{1,10}/;
+		const authorPattern = /\w{1,10}/;
+		const releaseDatePattern = /\d{2}\/\d{2}\/\d{4}/;
+		const grossPricePerUnitPattern = /\d{1,3}\.\d{2}/;
+		const discountPercentagePattern = /\d{1,3}/;
+		const createdDatePattern = /\d{2}\/\d{2}\/\d{4}/;
+		const descriptionPattern = /\w{1,100}/;
+		const stockPattern = /\d{1,4}/;
+
+		if (!(book.getIsbn() === undefined || new RegExp(isbnPattern).test(book.getIsbn() || ""))) return false;
+		if (!(book.getImgRef() === undefined || new RegExp(imgRefPattern).test(book.getImgRef() || ""))) return false;
+		if (!(book.getTitle() === undefined || new RegExp(titlePattern).test(book.getTitle() || ""))) return false;
+		if (!(book.getAuthor() === undefined || new RegExp(authorPattern).test(book.getAuthor() || ""))) return false;
+		if (!(book.getReleaseDate() === undefined || new RegExp(releaseDatePattern).test(book.getReleaseDate() || ""))) return false;
+		if (!(book.getGrossPricePerUnit() === undefined || new RegExp(grossPricePerUnitPattern).test(book.getGrossPricePerUnit()?.toFixed(2) || ""))) return false;
+		if (!(book.isInOffer() === undefined || typeof book.isInOffer() === "boolean")) return false;
+		if (!(book.getDiscountPercentage() === undefined || new RegExp(discountPercentagePattern).test(book.getDiscountPercentage()?.toString() || ""))) return false;
+		if (!(book.itHasIva() === undefined || typeof book.itHasIva() === "boolean")) return false;
+		if (!(book.getCreatedDate() === undefined || new RegExp(createdDatePattern).test(book.getCreatedDate() || ""))) return false;
+		if (!(book.getDescription() === undefined || new RegExp(descriptionPattern).test(book.getDescription() || ""))) return false;
+		if (!(book.getStock() === undefined || new RegExp(stockPattern).test(book.getStock()?.toString() || ""))) return false;
+		if (!(book.isVisible() === undefined || typeof book.isVisible() === "boolean")) return false;
+		if (!(book.isRecommended() === undefined || typeof book.isRecommended() === "boolean")) return false;
+		if (!(book.isBestSeller() === undefined || typeof book.isBestSeller() === "boolean")) return false;
+		if (!(book.isRecent() === undefined || typeof book.isRecent() === "boolean")) return false;
+		return true;
+	}
 
 	public static validateUser(user: User): boolean {
 		const userPattern = /\w{1}/;
@@ -543,6 +558,20 @@ export class InputValidator {
 		if (!new RegExp(emailPattern).test(user.getEmail() || "")) return false;
 		if (!new RegExp(mobilePattern).test(user.getMobile() || "")) return false;
 		if (!new RegExp(passworPattern).test(user.getPassword() || "")) return false;
+		return true;
+	}
+	public static validateUserToUpdate(user: User): boolean {
+		const userPattern = /\w{1}/;
+		const namePattern = /\w{2,5}/;
+		const emailPattern = /^([\w\.\-]+){1,3}@([\w\-]+)((\.(\w){2,3})+)$/;
+		const mobilePattern = /^(\+593)?\s?(\d{10}|\d{9})$/;
+		const passworPattern = /[\w\W\s]{5,}/;
+
+		if (!(user.getUser() === undefined || new RegExp(userPattern).test(user.getUser() || ""))) return false;
+		if (!(user.getName() === undefined || new RegExp(namePattern).test(user.getName() || ""))) return false;
+		if (!(user.getEmail() === undefined || new RegExp(emailPattern).test(user.getEmail() || ""))) return false;
+		if (!(user.getMobile() === undefined || new RegExp(mobilePattern).test(user.getMobile() || ""))) return false;
+		if (!(user.getPassword() === undefined || new RegExp(passworPattern).test(user.getPassword() || ""))) return false;
 		return true;
 	}
 
@@ -560,6 +589,22 @@ export class InputValidator {
 		if (!new RegExp(ciudadPattern).test(billingInfo.getCiudad() || "")) return false;
 		if (!new RegExp(numCasaPattern).test(billingInfo.getNumCasa() || "")) return false;
 		if (!new RegExp(callesPattern).test(billingInfo.getCalles() || "")) return false;
+		return true;
+	}
+	public static validateBillingInfoToUpdate(billingInfo: BillingInfo): boolean {
+		const toWhomPattern = /\w{2,5}/;
+		const ciPattern = /\d{10}/;
+		const provinciaPattern = /\w{1,5}/;
+		const ciudadPattern = /\w{1,5}/;
+		const numCasaPattern = /[\d- ]{1,10}/;
+		const callesPattern = /\w{1,25}/;
+
+		if (!(billingInfo.getToWhom() === undefined || new RegExp(toWhomPattern).test(billingInfo.getToWhom() || ""))) return false;
+		if (!(billingInfo.getCi() === undefined || new RegExp(ciPattern).test(billingInfo.getCi() || ""))) return false;
+		if (!(billingInfo.getProvincia() === undefined || new RegExp(provinciaPattern).test(billingInfo.getProvincia() || ""))) return false;
+		if (!(billingInfo.getCiudad() === undefined || new RegExp(ciudadPattern).test(billingInfo.getCiudad() || ""))) return false;
+		if (!(billingInfo.getNumCasa() === undefined || new RegExp(numCasaPattern).test(billingInfo.getNumCasa() || ""))) return false;
+		if (!(billingInfo.getCalles() === undefined || new RegExp(callesPattern).test(billingInfo.getCalles() || ""))) return false;
 		return true;
 	}
 

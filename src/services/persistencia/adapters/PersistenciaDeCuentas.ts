@@ -1,3 +1,4 @@
+import BillingInfo from "../../../core/entities/BillingInfo";
 import Client from "../../../core/entities/Client";
 import IPersistenciaCuenta from "../../../core/ports/persistencia/IPersistenciaCuenta";
 import { ClientConverter } from "../../app/utils";
@@ -29,9 +30,23 @@ export default class PersistenciaDeCuentas implements IPersistenciaCuenta {
 	public async actualizarCuenta(clientToSearch: Client, clientToUpdate: Client): Promise<Client> {
 		try {
 			let clientUpdated: IClientModel | null = null;
-			clientUpdated = await ClientModel.findOneAndUpdate({ user: clientToSearch.getUser() }, ClientConverter.clientToJSON(clientToUpdate), {
-				new: true,
+			const client = ClientConverter.clientToJSON(clientToUpdate);
+			const billingInfo = ClientConverter.billingInfoToJSON(clientToUpdate.getBillingInfo() || new BillingInfo());
+			let update = "{ ";
+			Object.entries(client).forEach(([key, value]) => {
+				update += `"${key}" : "${value}", `;
 			});
+			Object.entries(billingInfo).forEach(([key, value]) => {
+				update += `"billingInfo.${key}" : "${value}", `;
+			});
+			update = `${update.substring(0, update.length - 2)} }`;
+			clientUpdated = await ClientModel.findOneAndUpdate(
+				{ user: clientToSearch.getUser() },
+				{ $set: JSON.parse(update) },
+				{
+					new: true,
+				},
+			);
 			return !clientUpdated ? new Client() : ClientConverter.modelToClient(clientUpdated);
 		} catch (error) {
 			console.error(error);

@@ -23,10 +23,9 @@ export default class AdminController {
 
 	public roleVerification(req: Request, res: Response, next: NextFunction) {
 		const tokenDecoded = AdminController.decodeToken(req?.headers.authorization);
-		if (tokenDecoded) {
-			const role = tokenDecoded.role;
-			if (role !== "Admin") return res.status(401).redirect("/signin");
-		} else return res.status(404).redirect("/signin");
+		if (!tokenDecoded) return res.status(404).redirect("/signin");
+		const role = tokenDecoded?.role;
+		if (role !== "Admin") return res.status(401).redirect("/signin");
 		next();
 	}
 
@@ -34,10 +33,8 @@ export default class AdminController {
 		try {
 			const { user, password } = req.body;
 			if (!(user && password)) return res.status(400).json({ msg: "No valid input!" });
-
 			const newAdmin = AdminConverter.jsonToAdmin(req);
-			if (InputValidator.validateUser(newAdmin)) return res.status(400).json({ msg: "No valid input!" });
-
+			if (!InputValidator.validateUser(newAdmin)) return res.status(400).json({ msg: "No valid input!" });
 			const resultado = await new GestionDeAdmin().crearCuenta(newAdmin, new PersistenciaDeAdmin());
 			if (resultado === newAdmin) return res.status(303).json({ msg: `${newAdmin.getUser()} already exists!` });
 			if (!resultado.getUser()) return res.status(400).json({ msg: `${newAdmin.getUser()} was not saved!` });
@@ -90,7 +87,6 @@ export default class AdminController {
 		try {
 			const tokenDecoded = AdminController.decodeToken(req?.headers.authorization);
 			if (!tokenDecoded) return res.status(400).json({ msg: "No valid input!" }).redirect("/signin");
-
 			const user = tokenDecoded.user;
 			const admin = new Admin(user);
 			const resultado = await new GestionDeAdmin().obtenerCuentaPorToken(admin, new PersistenciaDeAdmin());
@@ -111,8 +107,7 @@ export default class AdminController {
 		try {
 			const adminToSearch = new Admin(req.params.user);
 			const adminToUpdate = AdminConverter.jsonToAdmin(req);
-			if (InputValidator.validateUser(adminToUpdate)) return res.status(400).json({ msg: "No valid input!" });
-
+			if (!InputValidator.validateUserToUpdate(adminToUpdate)) return res.status(400).json({ msg: "No valid input!" });
 			const resultado = await new GestionDeAdmin().actualizarCuenta(adminToSearch, adminToUpdate, new PersistenciaDeAdmin());
 			if (!resultado.getUser()) return res.status(404).json({ msg: `${adminToSearch.getUser()} was not found!` });
 			return res.status(200).json({ msg: `${resultado.getUser()} updated!` });
@@ -136,6 +131,8 @@ export default class AdminController {
 
 	public async getAllTransactions(req: Request, res: Response) {
 		try {
+			console.log("transactions");
+
 			const resultado = await new GestionDeTransacciones().listarTodasLasTransacciones(new PersistenciaDeTransacciones());
 			return res.status(200).json(resultado);
 		} catch (error) {

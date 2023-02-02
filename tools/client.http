@@ -3,23 +3,37 @@
 @api = http://localhost:{{port}}
 
 ### CLIENT
-@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsImlhdCI6MTY3NDE2OTYzMSwiZXhwIjoxNjc0Nzc0NDMxfQ._xfUgjw9v_ArkuD5Os0lveWLMwS-xlfG6JoBhUa1Vcs
-@clients=/api/clients
+@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsImlhdCI6MTY3NTM2NTUxNCwiZXhwIjoxNjc1OTcwMzE0fQ.GRlK9CV06SMt8LDROHiWwj5rt0os5i3UOgI6nkeI-Qw
+@clients={{api}}/api/clients
 @user=tiber
 
+### GET CLIENT WITH TOKEN
+GET {{clients}}/signin
+Authorization: {{auth}}
+
 ### UPDATE CLIENT
-PUT {{api}}{{clients}}/{{user}}
+PUT {{clients}}/{{user}}
 Authorization: {{auth}}
 Content-Type: application/json
 
 {
+    "user": "tiber",
+    "name": "da8ah",
+    "email": "tiber@email.com",
+    "mobile": "+593000000001",
+    "password": "tiber",
     "billingInfo": {
-        "toWhom": "Danilo Ochoa Hidalgo"
+      "toWhom": "tiber",
+      "ci": "1000000001",
+      "provincia": "Loja",
+      "ciudad": "Loja",
+      "numCasa": "000",
+      "calles": "Principal y Secundaria"
     }
 }
 
 ### DELETE CLIENT
-DELETE {{api}}{{clients}}/{{user}}
+DELETE {{clients}}/{{user}}
 Authorization: {{auth}}
 
 
@@ -28,11 +42,11 @@ Authorization: {{auth}}
 @transactions=/transactions
 
 ### RETRIEVE ALL TRANSACTIONS OF A CLIENT
-GET {{api}}{{clients}}{{transactions}}/{{user}}
+GET {{clients}}{{transactions}}/{{user}}
 Authorization: {{auth}}
 
 ### CREATE NEW TRANSACTION AND ADD TO THE CLIENT
-POST {{api}}{{clients}}{{transactions}}
+POST {{clients}}{{transactions}}
 Authorization: {{auth}}
 Content-Type: application/json
 

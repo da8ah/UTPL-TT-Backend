@@ -14,15 +14,20 @@ export default class AuthController {
 		}
 	}
 
+	private static decodeToken(authorization: string | undefined) {
+		let tokenDecoded = null;
+		if (authorization !== undefined) tokenDecoded = jwt.decode(authorization);
+		return JSON.parse(JSON.stringify(tokenDecoded));
+	}
+
 	public async signUp(req: Request, res: Response) {
 		try {
 			const { user, password } = req.body;
 			if (!(user && password)) return res.status(400).json({ msg: "No valid input!" });
-
 			const newClient = ClientConverter.jsonToClient(req);
-			if (InputValidator.validateUser(newClient)) return res.status(400).json({ msg: "No valid input!" });
+			if (!InputValidator.validateUser(newClient)) return res.status(400).json({ msg: "No valid input!" });
 			if (newClient.getBillingInfo()?.getToWhom()) {
-				if (InputValidator.validateBillingInfo(newClient.getBillingInfo() || new BillingInfo()))
+				if (!InputValidator.validateBillingInfo(newClient.getBillingInfo() || new BillingInfo()))
 					return res.status(400).json({ msg: "No valid input!" });
 			}
 
@@ -53,7 +58,7 @@ export default class AuthController {
 					expires: new Date(Date.now() + 900000),
 					httpOnly: true,
 				})
-				.send({ jwt: `${tokenCreated}` });
+				.send(resultado);
 		} catch (error) {
 			console.error(error);
 			return res.status(500).json({ msg: "Server internal error!" });
@@ -66,8 +71,23 @@ export default class AuthController {
 				if (err) {
 					return next(err);
 				}
-				res.redirect("/");
 			});
+		} catch (error) {
+			console.error(error);
+			return res.status(500).json({ msg: "Server internal error!" });
+		}
+	}
+
+	public async getClientWithToken(req: Request, res: Response) {
+		try {
+			const tokenDecoded = AuthController.decodeToken(req?.headers.authorization);
+			if (!tokenDecoded) return res.status(400).json({ msg: "No valid input!" });
+			const user = tokenDecoded.user;
+			const client = new Client(user);
+			const resultado = await new GestionDeAutenticacionClient().obtenerCuentaPorToken(client, new PersistenciaDeCuentas());
+			if (!resultado.getUser()) return res.status(404).json({ msg: `${client.getUser()} was not found!` });
+
+			return res.status(200).json(resultado);
 		} catch (error) {
 			console.error(error);
 			return res.status(500).json({ msg: "Server internal error!" });

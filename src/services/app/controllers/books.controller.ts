@@ -9,8 +9,7 @@ export default class BooksController {
 	public async createBook(req: Request, res: Response) {
 		try {
 			const newStockBook = BookConverter.jsonToBook(req);
-			if (InputValidator.validateStockBook(newStockBook)) return res.status(400).json({ msg: "No valid input!" });
-
+			if (InputValidator.validateNewStockBook(newStockBook)) return res.status(400).json({ msg: "No valid input!" });
 			const useCaseGestionarLibro = new GestionDeLibros();
 			const resultado = await useCaseGestionarLibro.crearLibro(newStockBook, new PersistenciaDeLibros());
 			if (resultado === newStockBook) return res.status(303).json({ msg: `${newStockBook.getIsbn()} already exists!` });
@@ -51,8 +50,7 @@ export default class BooksController {
 		try {
 			const stockBookToSearch = new StockBook(req.params.isbn);
 			const stockBookToUpdate = BookConverter.jsonToBook(req);
-			if (InputValidator.validateStockBook(stockBookToUpdate)) return res.status(400).json({ msg: "No valid input!" });
-
+			if (!InputValidator.validateStockBookToUpdate(stockBookToUpdate)) return res.status(400).json({ msg: "No valid input!" });
 			const useCaseGestionarLibro = new GestionDeLibros();
 			const resultado = await useCaseGestionarLibro.actualizarLibro(stockBookToSearch, stockBookToUpdate, new PersistenciaDeLibros());
 			if (!resultado.getIsbn()) return res.status(404).json({ msg: `${stockBookToSearch.getIsbn()} was not found!` });

@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### GET ADMIN WITH TOKEN
-GET {{admin}}/{{user}}
+GET {{admin}}/login
 Authorization: {{auth}}
 
 ### CREATE ADMIN
@@ -33,6 +33,16 @@ Content-Type: application/json
     "password": "tiber"
 }
 
+### UPDATE ADMIN
+PUT {{admin}}/{{user}}
+Authorization: {{auth}}
+Content-Type: application/json
+
+{
+    "user": "tiber",
+    "name": "da8ah"    
+}
+
 
 
 ### BOOKS
@@ -40,6 +50,7 @@ Content-Type: application/json
 
 ### CREATE BOOK
 POST {{books}}
+Authorization: {{auth}}
 Content-Type: application/json
 
 {
@@ -67,15 +78,17 @@ Content-Type: application/json
 
 ### UPDATE BOOK
 PUT {{books}}/{{isbn}}
+Authorization: {{auth}}
 Content-Type: application/json
 
 {
   "description": "THE MULTI-MILLION COPY BESTSELLER",
-  "hasIva": false
+  "hasIva": true
 }
 
 ### DELETE BOOK
 DELETE {{books}}/{{isbn}}
+Authorization: {{auth}}
 
 
 
