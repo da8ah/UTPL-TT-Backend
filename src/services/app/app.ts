@@ -25,7 +25,6 @@ passport.use(passportMiddleware.authAdmin);
 // Routes
 app.use(homeRouter);
 app.use(clientRouter);
-// app.use(paymentRouter);
 app.use(adminRouter);
 
 export default app;
