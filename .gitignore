@@ -4,3 +4,4 @@ node_modules/
 .env
 globalConfig.json
 notes.json
+rome.json
