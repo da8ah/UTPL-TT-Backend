@@ -1,6 +1,6 @@
 ###
 @port = 8080
-@api = http://localhost:{{port}}/api/books
+@api = http://localhost:{{port}}
 
 ### LOGIN CLIENT
 POST {{api}}/signin
@@ -33,11 +33,14 @@ Content-Type: application/json
 
 
 
+### BOOKS
+@books={{api}}/api/books
+
 ### GET ALL BOOKS
-GET {{api}}
+GET {{books}}
 
 ###
 @search = bestseller
 
 ### GET BOOK BY STRING
-GET {{api}}/{{search}}
+GET {{books}}/{{search}}

@@ -1,13 +1,20 @@
-import app from './services/app/app';
-import DBConn from './services/persistencia/adapters/DBConn';
+import app from "./services/app/app";
+import DBConn from "./services/persistencia/adapters/DBConn";
 
 import Client from "./core/entities/Client";
 import ToBuyBook from "./core/entities/ToBuyBook";
-import { TransactionConverter } from "./services/app/utils";
+import {
+	BookConverter,
+	TransactionConverter,
+	InputValidator,
+} from "./services/app/utils";
 import CardTransactionModel from "./services/persistencia/models/CardTransactionModel";
-import Card from './core/entities/Card';
-import CardTransaction from './core/entities/CardTransaction';
-import Cart from './core/entities/Cart';
+import Card from "./core/entities/Card";
+import CardTransaction from "./core/entities/CardTransaction";
+import Cart from "./core/entities/Cart";
+import StockBook from "./core/entities/StockBook";
+import Admin from "./core/entities/Admin";
+import BillingInfo from "./core/entities/BillingInfo";
 // const client = new Client(
 //     "tiber",
 //     "da8ah",
@@ -67,7 +74,6 @@ import Cart from './core/entities/Cart';
 //     }
 // );
 
-
 // const cardTransaction = new CardTransaction(
 //     undefined,
 //     new Date().toLocaleDateString(),
@@ -95,14 +101,90 @@ import Cart from './core/entities/Cart';
 // const tra = book.getTransactions();
 // if (tra != undefined) console.log(tra[0].getCart()?.getToBuyBooks());
 
+// const stockBook = new StockBook(
+// 	"9780141988511",
+// 	"https://azure.blob.url.jpg",
+// 	"12 Rules for Life: An Antidote to Chaos",
+// 	"",
+// 	"16/01/2018",
+// 	25,
+// 	true,
+// 	25,
+// 	false,
+// 	"10/01/2023",
+// 	"JBP's BestSeller",
+// 	100,
+// 	true,
+// 	true,
+// 	true,
+// 	false,
+// );
 
+// const badStockBook = new StockBook(
+// 	"1tfjaweoy23",
+// 	"ljsad9",
+// 	"csadk lkdalkj csd casd 12 21,asd;",
+// 	"sdakjdsa 21kjasd ",
+// 	"sadas",
+// 	90.0909391,
+// 	true,
+// 	925.9,
+// 	false,
+// 	"01/2023",
+// 	"JBP's BestSeller",
+// 	100.0,
+// 	true,
+// 	true,
+// 	true,
+// 	false,
+// );
+
+// console.log(UserInputValidator.validateNewStockBook(stockBook));
+// console.log(UserInputValidator.validateNewStockBook(badStockBook));
+// console.log(UserInputValidator.validateNewStockBook(new StockBook()));
+
+// const admin = new Admin(
+// 	"tiber",
+// 	"da8ah",
+// 	"tiber@email.com",
+// 	"+593000000001",
+// 	"tiber",
+// );
+// const client = new Client(
+// 	"tiber_nunca_muere12",
+// 	"Danilo Ochoa",
+// 	"tiber@email.com",
+// 	"+593 1000000001",
+// 	"'6Hp2\"'Z8jGau&!w",
+// );
+// console.log(InputValidator.validateUser(admin));
+// console.log(InputValidator.validateUser(client));
+// const bi = new BillingInfo(
+// 	"tiber",
+// 	"1000000001",
+// 	"Loja",
+// 	"Loja",
+// 	"000",
+// 	"Principal y Secundaria",
+// );
+// const bi2 = new BillingInfo(
+// 	"tiber nunca muere",
+// 	"1000000001",
+// 	"Loja",
+// 	"Loja",
+// 	"000",
+// 	"Principal y Secundaria",
+// );
+
+// console.log(InputValidator.validateBillingInfo(bi));
+// console.log(InputValidator.validateBillingInfo(bi2));
 
 DBConn.getInstance();
 
-const port = app.get('port')
+const port = app.get("port");
 
 const server = app.listen(port, () => {
-    console.log('Server on port', port);
+	console.log("Server on port", port);
 });
 
 export default server;

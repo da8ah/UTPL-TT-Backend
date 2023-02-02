@@ -3,12 +3,12 @@
 @api = http://localhost:{{port}}
 
 ### ADMIN
-@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY3NDU0MTM0NiwiZXhwIjoxNjc0ODAwNTQ2fQ.ajdx379oXCSIwqUvBAsh9ujaNohdZYAha49QbbmNUo0
-@admin=/api/admin
+@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY3NTI4MDU2NiwiZXhwIjoxNjc1NTM5NzY2fQ.hDVQXztxk06yiA5lnT8dUATO6ixi95mIr6lLlfCDghw
+@admin={{api}}/api/admin
 @user=tiber
 
 ### LOGIN ADMIN
-POST {{api}}{{admin}}/login
+POST {{admin}}/login
 Content-Type: application/json
 
 {
@@ -16,8 +16,12 @@ Content-Type: application/json
   "password": "tiber"
 }
 
+### GET ADMIN WITH TOKEN
+GET {{admin}}/{{user}}
+Authorization: {{auth}}
+
 ### CREATE ADMIN
-POST {{api}}{{admin}}/newuser
+POST {{admin}}/newuser
 Authorization: {{auth}}
 Content-Type: application/json
 
@@ -31,8 +35,11 @@ Content-Type: application/json
 
 
 
+### BOOKS
+@books={{admin}}/books
+
 ### CREATE BOOK
-POST {{api}}
+POST {{books}}
 Content-Type: application/json
 
 {
@@ -46,7 +53,7 @@ Content-Type: application/json
   "discountPercentage": 25,
   "hasIva": false,
   "ivaPercentage": 0,
-  "createdDate": "10/01/2023",
+  "createdDate": "10/01/2023", // Careful MongoModel with Date(mm-dd-yyyy)!
   "description": "JBP's BestSeller",
   "stock": 100,
   "visible": true,
@@ -59,7 +66,7 @@ Content-Type: application/json
 @isbn = 9780141988511
 
 ### UPDATE BOOK
-PUT {{api}}/{{isbn}}
+PUT {{books}}/{{isbn}}
 Content-Type: application/json
 
 {
@@ -68,13 +75,13 @@ Content-Type: application/json
 }
 
 ### DELETE BOOK
-DELETE {{api}}/{{isbn}}
+DELETE {{books}}/{{isbn}}
 
 
 
 ### TRANSACTIONS
-@transactions=/transactions
+@transactions={{admin}}/transactions
 
 ### RETRIEVE ALL TRANSACTIONS
-GET {{api}}{{admin}}{{transactions}}
+GET {{transactions}}
 Authorization: {{auth}}

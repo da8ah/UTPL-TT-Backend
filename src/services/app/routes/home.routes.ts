@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import AuthController from '../controllers/auth.controller';
-import BooksController from '../controllers/books.controller';
+import { Router } from "express";
+import AuthController from "../controllers/auth.controller";
+import BooksController from "../controllers/books.controller";
 
 const homeRouter = Router();
 const homeController = new AuthController();
@@ -15,6 +15,6 @@ export const API_PATH = "/api/books";
 
 // BOOKS
 homeRouter.get(API_PATH, booksController.getAll);
-homeRouter.get(API_PATH + "/:search", booksController.getBooksByString);
+homeRouter.get(`${API_PATH}/:search`, booksController.getBooksByString);
 
 export default homeRouter;
