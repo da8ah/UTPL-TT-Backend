@@ -14,7 +14,7 @@ export const API_PATH = "/api/admin";
 
 // AUTH
 adminRouter.post(`${API_PATH}/login`, adminController.logIn);
-adminRouter.post(`${API_PATH}/logout`, adminController.logOut);
+// adminRouter.get(`${API_PATH}/logout`, adminController.logOut); // With Session=true only
 adminRouter.post(`${API_PATH}/newuser`, passportAuth, adminController.signUp);
 
 // ADMIN

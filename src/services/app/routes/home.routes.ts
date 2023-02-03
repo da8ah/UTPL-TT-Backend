@@ -8,7 +8,7 @@ const homeController = new AuthController();
 // AUTH
 homeRouter.post("/signup", homeController.signUp);
 homeRouter.post("/signin", homeController.logIn);
-homeRouter.post("/logout", homeController.logOut);
+// homeRouter.get("/logout", homeController.logOut); // With Session=true only
 
 const booksController = new BooksController();
 export const API_PATH = "/api/books";

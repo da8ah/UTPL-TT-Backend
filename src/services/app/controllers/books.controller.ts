@@ -9,7 +9,7 @@ export default class BooksController {
 	public async createBook(req: Request, res: Response) {
 		try {
 			const newStockBook = BookConverter.jsonToBook(req);
-			if (InputValidator.validateNewStockBook(newStockBook)) return res.status(400).json({ msg: "No valid input!" });
+			if (!InputValidator.validateNewStockBook(newStockBook)) return res.status(400).json({ msg: "No valid input!" });
 			const useCaseGestionarLibro = new GestionDeLibros();
 			const resultado = await useCaseGestionarLibro.crearLibro(newStockBook, new PersistenciaDeLibros());
 			if (resultado === newStockBook) return res.status(303).json({ msg: `${newStockBook.getIsbn()} already exists!` });

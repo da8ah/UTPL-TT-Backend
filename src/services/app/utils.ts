@@ -523,7 +523,7 @@ export class InputValidator {
 		const releaseDatePattern = /\d{2}\/\d{2}\/\d{4}/;
 		const grossPricePerUnitPattern = /\d{1,3}\.\d{2}/;
 		const discountPercentagePattern = /\d{1,3}/;
-		const createdDatePattern = /\d{2}\/\d{2}\/\d{4}/;
+		const createdDatePattern = /(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/;
 		const descriptionPattern = /\w{1,100}/;
 		const stockPattern = /\d{1,4}/;
 
@@ -542,7 +542,7 @@ export class InputValidator {
 		if (!(book.isVisible() === undefined || typeof book.isVisible() === "boolean")) return false;
 		if (!(book.isRecommended() === undefined || typeof book.isRecommended() === "boolean")) return false;
 		if (!(book.isBestSeller() === undefined || typeof book.isBestSeller() === "boolean")) return false;
-		if (!(book.isRecent() === undefined || typeof book.isRecent() === "boolean")) return false;
+		if (!(book.isRecent() === undefined || typeof book.isRecent() === "boolean")) return false;		
 		return true;
 	}
 
