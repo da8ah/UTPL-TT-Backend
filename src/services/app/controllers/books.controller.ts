@@ -24,7 +24,17 @@ export default class BooksController {
 	public async getAll(req: Request, res: Response) {
 		try {
 			const useCaseGestionarInicio = new GestionDeInicio();
-			const resultado = await useCaseGestionarInicio.listarCatalogoDeLibros(new PersistenciaDeLibros());
+			const resultado = await useCaseGestionarInicio.listarCatalogoDeLibrosVisibles(new PersistenciaDeLibros());
+			return res.status(200).json(resultado);
+		} catch (error) {
+			console.error(error);
+			return res.status(500).json({ msg: "Server internal error!" });
+		}
+	}
+
+	public async getAllStock(req: Request, res: Response) {
+		try {
+			const resultado = await new GestionDeLibros().listarCatalogoDeLibrosEnStock(new PersistenciaDeLibros());
 			return res.status(200).json(resultado);
 		} catch (error) {
 			console.error(error);

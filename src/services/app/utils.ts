@@ -490,10 +490,10 @@ export class InputValidator {
 		const imgRefPattern = /^(https:\/\/)[\w+\.]+(png|jpg)$/;
 		const titlePattern = /\w{1,10}/;
 		const authorPattern = /\w{1,10}/;
-		const releaseDatePattern = /\d{2}\/\d{2}\/\d{4}/;
+		const releaseDatePattern = /\d{1,2}\/\d{1,2}\/\d{4}/;
 		const grossPricePerUnitPattern = /\d{1,3}\.\d{2}/;
 		const discountPercentagePattern = /\d{1,3}/;
-		const createdDatePattern = /\d{2}\/\d{2}\/\d{4}/;
+		const createdDatePattern = /(\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/;
 		const descriptionPattern = /\w{1,100}/;
 		const stockPattern = /\d{1,4}/;
 
@@ -520,10 +520,10 @@ export class InputValidator {
 		const imgRefPattern = /^(https:\/\/)[\w+\.]+(png|jpg)$/;
 		const titlePattern = /\w{1,10}/;
 		const authorPattern = /\w{1,10}/;
-		const releaseDatePattern = /\d{2}\/\d{2}\/\d{4}/;
+		const releaseDatePattern = /\d{1,2}\/\d{1,2}\/\d{4}/;
 		const grossPricePerUnitPattern = /\d{1,3}\.\d{2}/;
 		const discountPercentagePattern = /\d{1,3}/;
-		const createdDatePattern = /(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/;
+		const createdDatePattern = /(\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/;
 		const descriptionPattern = /\w{1,100}/;
 		const stockPattern = /\d{1,4}/;
 

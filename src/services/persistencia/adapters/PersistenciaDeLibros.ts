@@ -36,9 +36,19 @@ export default class PersistenciaDeLibros implements IPersistenciaLibro {
 		}
 	}
 
-	public async obtenerLibros(): Promise<StockBook[]> {
+	public async obtenerLibrosEnStock(): Promise<StockBook[]> {
 		try {
 			let books: IStockBookModel[] = await StockBookModel.find();
+			return !books ? [] : books.map((bookModel) => BookConverter.modelToBook(bookModel));
+		} catch (error) {
+			console.error(error);
+			return [];
+		}
+	}
+
+	public async obtenerLibrosVisibles(): Promise<StockBook[]> {
+		try {
+			let books: IStockBookModel[] = await StockBookModel.find({ visible: { $eq: true } });
 			return !books ? [] : books.map((bookModel) => BookConverter.modelToBook(bookModel));
 		} catch (error) {
 			console.error(error);

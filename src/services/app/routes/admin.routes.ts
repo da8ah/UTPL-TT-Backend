@@ -25,6 +25,8 @@ adminRouter.delete(`${API_PATH}/:user`, adminController.roleVerification, passpo
 const booksController = new BooksController();
 
 // BOOKS
+// Listar todo Book en Stock
+adminRouter.get(`${API_PATH}/books`, adminController.roleVerification, passportAuth, booksController.getAllStock);
 // Crear nuevo Book
 adminRouter.post(`${API_PATH}/books`, adminController.roleVerification, passportAuth, booksController.createBook);
 // Actualizar Book

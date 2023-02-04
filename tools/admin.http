@@ -48,6 +48,10 @@ Content-Type: application/json
 ### BOOKS
 @books={{admin}}/books
 
+### GET ALL BOOKS
+GET {{books}}
+Authorization: {{auth}}
+
 ### CREATE BOOK
 POST {{books}}
 Authorization: {{auth}}

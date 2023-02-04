@@ -8,6 +8,10 @@ export default class GestionDeLibros {
 		return iPersistenciaLibro.guardarLibroNuevo(stockBook);
 	}
 
+	public async listarCatalogoDeLibrosEnStock(iPersistenciaLibro: IPersistenciaLibro): Promise<StockBook[]> {
+		return iPersistenciaLibro.obtenerLibrosEnStock();
+	}
+
 	// Two StockBooks required in case of ISBN update
 	public async actualizarLibro(bookToSearch: StockBook, bookToUpdate: StockBook, iPersistenciaLibro: IPersistenciaLibro): Promise<StockBook> {
 		return iPersistenciaLibro.actualizarLibro(bookToSearch, bookToUpdate);
