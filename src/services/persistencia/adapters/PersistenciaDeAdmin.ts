@@ -7,7 +7,7 @@ export default class PersistenciaDeAdmin implements IPersistenciaCuenta {
 	public async buscarCuenta(admin: Admin): Promise<Admin> {
 		try {
 			let adminFound: IAdminModel | null = null;
-			adminFound = await AdminModel.findOne({ user: admin.getUser() });
+			adminFound = await AdminModel.findOne({ user: admin.getUser()?.toLowerCase() });
 			return !adminFound ? new Admin() : AdminConverter.modelToAdmin(adminFound);
 		} catch (error) {
 			console.error(error);
@@ -29,7 +29,9 @@ export default class PersistenciaDeAdmin implements IPersistenciaCuenta {
 	public async actualizarCuenta(adminToSearch: Admin, adminToUpdate: Admin): Promise<Admin> {
 		try {
 			let adminUpdated: IAdminModel | null = null;
-			adminUpdated = await AdminModel.findOneAndUpdate({ user: adminToSearch.getUser() }, AdminConverter.adminToJSON(adminToUpdate), { new: true });
+			adminUpdated = await AdminModel.findOneAndUpdate({ user: adminToSearch.getUser()?.toLowerCase() }, AdminConverter.adminToJSON(adminToUpdate), {
+				new: true,
+			});
 			return !adminUpdated ? new Admin() : AdminConverter.modelToAdmin(adminUpdated);
 		} catch (error) {
 			console.error(error);
@@ -40,7 +42,7 @@ export default class PersistenciaDeAdmin implements IPersistenciaCuenta {
 	public async eliminarCuenta(admin: Admin): Promise<Admin> {
 		try {
 			let adminDeleted: IAdminModel | null = null;
-			adminDeleted = await AdminModel.findOneAndDelete({ user: admin.getUser() });
+			adminDeleted = await AdminModel.findOneAndDelete({ user: admin.getUser()?.toLowerCase() });
 			return !adminDeleted ? new Admin() : AdminConverter.modelToAdmin(adminDeleted);
 		} catch (error) {
 			console.error(error);

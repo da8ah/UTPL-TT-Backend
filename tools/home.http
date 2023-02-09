@@ -16,13 +16,13 @@ POST {{api}}/signup
 Content-Type: application/json
 
 {
-    "user": "tiber",
-    "name": "da8ah",
-    "email": "tiber@email.com",
+    "user": "da8ah.tiber",
+    "name": "Danilo Ochoa Hidalgo",
+    "email": "danilo.ochoa.hidalgo@email.com",
     "mobile": "+593000000001",
-    "password": "tiber",
+    "password": "tibernuncamuere",
     "billingInfo": {
-      "toWhom": "tiber",
+      "toWhom": "Danilo Ochoa Hidalgo",
       "ci": "1000000001",
       "provincia": "Loja",
       "ciudad": "Loja",

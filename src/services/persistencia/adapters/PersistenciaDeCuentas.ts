@@ -8,7 +8,7 @@ export default class PersistenciaDeCuentas implements IPersistenciaCuenta {
 	public async buscarCuenta(client: Client): Promise<Client> {
 		try {
 			let clientFound: IClientModel | null = null;
-			clientFound = await ClientModel.findOne({ user: client.getUser() });
+			clientFound = await ClientModel.findOne({ user: client.getUser()?.toLowerCase() });
 			return !clientFound ? new Client() : ClientConverter.modelToClient(clientFound);
 		} catch (error) {
 			console.error(error);
@@ -41,7 +41,7 @@ export default class PersistenciaDeCuentas implements IPersistenciaCuenta {
 			});
 			update = `${update.substring(0, update.length - 2)} }`;
 			clientUpdated = await ClientModel.findOneAndUpdate(
-				{ user: clientToSearch.getUser() },
+				{ user: clientToSearch.getUser()?.toLowerCase() },
 				{ $set: JSON.parse(update) },
 				{
 					new: true,
@@ -57,7 +57,7 @@ export default class PersistenciaDeCuentas implements IPersistenciaCuenta {
 	public async eliminarCuenta(client: Client): Promise<Client> {
 		try {
 			let clientDeleted: IClientModel | null = null;
-			clientDeleted = await ClientModel.findOneAndDelete({ user: client.getUser() });
+			clientDeleted = await ClientModel.findOneAndDelete({ user: client.getUser()?.toLowerCase() });
 			return !clientDeleted ? new Client() : ClientConverter.modelToClient(clientDeleted);
 		} catch (error) {
 			console.error(error);

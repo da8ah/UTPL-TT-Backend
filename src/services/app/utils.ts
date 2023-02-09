@@ -176,7 +176,7 @@ export class ClientConverter {
 
 	public static clientToJSON(client: Client): JSON {
 		let json: any = {};
-		if (client.getUser() != undefined) json["user"] = client.getUser();
+		if (client.getUser() != undefined) json["user"] = client.getUser()?.toLowerCase();
 		if (client.getName() != undefined) json["name"] = client.getName();
 		if (client.getEmail() != undefined) json["email"] = client.getEmail();
 		if (client.getMobile() != undefined) json["mobile"] = client.getMobile();
@@ -236,7 +236,7 @@ export class ClientConverter {
 
 	public static clientToModel(client: Client): IClientModel {
 		return new ClientModel({
-			user: client.getUser(),
+			user: client.getUser()?.toLowerCase(),
 			name: client.getName(),
 			email: client.getEmail(),
 			mobile: client.getMobile(),
@@ -444,7 +444,7 @@ export class TransactionConverter {
 export class AdminConverter {
 	public static adminToJSON(admin: Admin): JSON {
 		let json: any = {};
-		if (admin.getUser() != undefined) json["user"] = admin.getUser();
+		if (admin.getUser() != undefined) json["user"] = admin.getUser()?.toLowerCase();
 		if (admin.getName() != undefined) json["name"] = admin.getName();
 		if (admin.getEmail() != undefined) json["email"] = admin.getEmail();
 		if (admin.getMobile() != undefined) json["mobile"] = admin.getMobile();
@@ -474,7 +474,7 @@ export class AdminConverter {
 
 	public static adminToModel(admin: Admin): IAdminModel {
 		return new AdminModel({
-			user: admin.getUser(),
+			user: admin.getUser()?.toLowerCase(),
 			name: admin.getName(),
 			email: admin.getEmail(),
 			mobile: admin.getMobile(),
@@ -546,66 +546,53 @@ export class InputValidator {
 		return true;
 	}
 
-	public static validateUser(user: User): boolean {
-		const userPattern = /\w{1}/;
-		const namePattern = /\w{2,5}/;
-		const emailPattern = /^([\w\.\-]+){1,3}@([\w\-]+)((\.(\w){2,3})+)$/;
-		const mobilePattern = /^(\+593)?\s?(\d{10}|\d{9})$/;
-		const passworPattern = /[\w\W\s]{5,}/;
+	
+	private static userPattern = /^[A-Za-z]((\_|\.)?[A-Za-z0-9]){5,19}$/;
+	private static namePattern = /^[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}(\s[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}){1,4}$/;
+	private static emailPattern = /^([\w\.\-]+){1,3}@([\w\-]+)((\.(\w){2,3})+)$/;
+	private static mobilePattern = /^(\+593)?\s?(\d{10}|\d{9})$/;
+	private static passworPattern = /^[\w\W\s]{5,}$/;
 
-		if (!new RegExp(userPattern).test(user.getUser() || "")) return false;
-		if (!new RegExp(namePattern).test(user.getName() || "")) return false;
-		if (!new RegExp(emailPattern).test(user.getEmail() || "")) return false;
-		if (!new RegExp(mobilePattern).test(user.getMobile() || "")) return false;
-		if (!new RegExp(passworPattern).test(user.getPassword() || "")) return false;
+	private static toWhomPattern = /^[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}(\s[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}){1,4}$/;
+	private static ciPattern = /^\d{10}$/;
+	private static provinciaPattern = /^[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}(\.)?(\s[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}){0,4}$/;
+	private static ciudadPattern = /^[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}(\.)?(\s[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}){0,4}$/;
+	private static numCasaPattern = /^\d((\-|\s)?\d){1,10}$/;
+	private static callesPattern = /^[A-Za-zÁáÉéÍíÓóÚúÜüÑñ0-9]{1,15}((\.|\-|\,)?\s?[A-Za-zÁáÉéÍíÓóÚúÜüÑñ0-9]{1,15}){3,10}$/;
+
+	public static validateUser(user: User): boolean {
+		if (!new RegExp(this.userPattern).test(user.getUser() || "")) return false;
+		if (!new RegExp(this.namePattern).test(user.getName() || "")) return false;
+		if (!new RegExp(this.emailPattern).test(user.getEmail() || "")) return false;
+		if (!new RegExp(this.mobilePattern).test(user.getMobile() || "")) return false;
+		if (!new RegExp(this.passworPattern).test(user.getPassword() || "")) return false;
 		return true;
 	}
 	public static validateUserToUpdate(user: User): boolean {
-		const userPattern = /\w{1}/;
-		const namePattern = /\w{2,5}/;
-		const emailPattern = /^([\w\.\-]+){1,3}@([\w\-]+)((\.(\w){2,3})+)$/;
-		const mobilePattern = /^(\+593)?\s?(\d{10}|\d{9})$/;
-		const passworPattern = /[\w\W\s]{5,}/;
-
-		if (!(user.getUser() === undefined || new RegExp(userPattern).test(user.getUser() || ""))) return false;
-		if (!(user.getName() === undefined || new RegExp(namePattern).test(user.getName() || ""))) return false;
-		if (!(user.getEmail() === undefined || new RegExp(emailPattern).test(user.getEmail() || ""))) return false;
-		if (!(user.getMobile() === undefined || new RegExp(mobilePattern).test(user.getMobile() || ""))) return false;
-		if (!(user.getPassword() === undefined || new RegExp(passworPattern).test(user.getPassword() || ""))) return false;
+		if (!(user.getUser() === undefined || new RegExp(this.userPattern).test(user.getUser() || ""))) return false;
+		if (!(user.getName() === undefined || new RegExp(this.namePattern).test(user.getName() || ""))) return false;
+		if (!(user.getEmail() === undefined || new RegExp(this.emailPattern).test(user.getEmail() || ""))) return false;
+		if (!(user.getMobile() === undefined || new RegExp(this.mobilePattern).test(user.getMobile() || ""))) return false;
+		if (!(user.getPassword() === undefined || new RegExp(this.passworPattern).test(user.getPassword() || ""))) return false;
 		return true;
 	}
 
 	public static validateBillingInfo(billingInfo: BillingInfo): boolean {
-		const toWhomPattern = /\w{2,5}/;
-		const ciPattern = /\d{10}/;
-		const provinciaPattern = /\w{1,5}/;
-		const ciudadPattern = /\w{1,5}/;
-		const numCasaPattern = /[\d- ]{1,10}/;
-		const callesPattern = /\w{1,25}/;
-
-		if (!new RegExp(toWhomPattern).test(billingInfo.getToWhom() || "")) return false;
-		if (!new RegExp(ciPattern).test(billingInfo.getCi() || "")) return false;
-		if (!new RegExp(provinciaPattern).test(billingInfo.getProvincia() || "")) return false;
-		if (!new RegExp(ciudadPattern).test(billingInfo.getCiudad() || "")) return false;
-		if (!new RegExp(numCasaPattern).test(billingInfo.getNumCasa() || "")) return false;
-		if (!new RegExp(callesPattern).test(billingInfo.getCalles() || "")) return false;
+		if (!new RegExp(this.toWhomPattern).test(billingInfo.getToWhom() || "")) return false;
+		if (!new RegExp(this.ciPattern).test(billingInfo.getCi() || "")) return false;
+		if (!new RegExp(this.provinciaPattern).test(billingInfo.getProvincia() || "")) return false;
+		if (!new RegExp(this.ciudadPattern).test(billingInfo.getCiudad() || "")) return false;
+		if (!new RegExp(this.numCasaPattern).test(billingInfo.getNumCasa() || "")) return false;
+		if (!new RegExp(this.callesPattern).test(billingInfo.getCalles() || "")) return false;
 		return true;
 	}
 	public static validateBillingInfoToUpdate(billingInfo: BillingInfo): boolean {
-		const toWhomPattern = /\w{2,5}/;
-		const ciPattern = /\d{10}/;
-		const provinciaPattern = /\w{1,5}/;
-		const ciudadPattern = /\w{1,5}/;
-		const numCasaPattern = /[\d- ]{1,10}/;
-		const callesPattern = /\w{1,25}/;
-
-		if (!(billingInfo.getToWhom() === undefined || new RegExp(toWhomPattern).test(billingInfo.getToWhom() || ""))) return false;
-		if (!(billingInfo.getCi() === undefined || new RegExp(ciPattern).test(billingInfo.getCi() || ""))) return false;
-		if (!(billingInfo.getProvincia() === undefined || new RegExp(provinciaPattern).test(billingInfo.getProvincia() || ""))) return false;
-		if (!(billingInfo.getCiudad() === undefined || new RegExp(ciudadPattern).test(billingInfo.getCiudad() || ""))) return false;
-		if (!(billingInfo.getNumCasa() === undefined || new RegExp(numCasaPattern).test(billingInfo.getNumCasa() || ""))) return false;
-		if (!(billingInfo.getCalles() === undefined || new RegExp(callesPattern).test(billingInfo.getCalles() || ""))) return false;
+		if (!(billingInfo.getToWhom() === undefined || new RegExp(this.toWhomPattern).test(billingInfo.getToWhom() || ""))) return false;
+		if (!(billingInfo.getCi() === undefined || new RegExp(this.ciPattern).test(billingInfo.getCi() || ""))) return false;
+		if (!(billingInfo.getProvincia() === undefined || new RegExp(this.provinciaPattern).test(billingInfo.getProvincia() || ""))) return false;
+		if (!(billingInfo.getCiudad() === undefined || new RegExp(this.ciudadPattern).test(billingInfo.getCiudad() || ""))) return false;
+		if (!(billingInfo.getNumCasa() === undefined || new RegExp(this.numCasaPattern).test(billingInfo.getNumCasa() || ""))) return false;
+		if (!(billingInfo.getCalles() === undefined || new RegExp(this.callesPattern).test(billingInfo.getCalles() || ""))) return false;
 		return true;
 	}
-
 }
