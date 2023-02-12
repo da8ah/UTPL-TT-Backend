@@ -5,7 +5,7 @@ import BooksController from "../controllers/books.controller";
 
 const adminRouter = Router();
 const adminController = new AdminController();
-const passportAuth = passport.authenticate("jwt", {
+const passportAuth = passport.authenticate("admin", {
 	session: false,
 	failureRedirect: "/signin",
 });

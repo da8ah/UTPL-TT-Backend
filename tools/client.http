@@ -3,8 +3,10 @@
 @api = http://localhost:{{port}}
 
 ### CLIENT
-@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsImlhdCI6MTY3NTM2NTUxNCwiZXhwIjoxNjc1OTcwMzE0fQ.GRlK9CV06SMt8LDROHiWwj5rt0os5i3UOgI6nkeI-Qw
+# @auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsImlhdCI6MTY3NjE3ODYwNSwiZXhwIjoxNjc2NzgzNDA1fQ.A5ClmKBuGnwfeQC5VFWAzOlRGfeTTL5dGZlfOE_S1pU
+@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGE4YWgudGliZXIiLCJlbWFpbCI6ImRhbmlsby5vY2hvYS5oaWRhbGdvQGVtYWlsLmNvbSIsImlhdCI6MTY3NjE4NjE3NywiZXhwIjoxNjc2NzkwOTc3fQ.j1A84mXwPdyveYFPPbqmtln3yVGSqpzydZZ9LpBWjl4
 @clients={{api}}/api/clients
+# @user=tiber
 @user=da8ah.tiber
 
 ### GET CLIENT WITH TOKEN
@@ -39,21 +41,25 @@ Authorization: {{auth}}
 
 
 ### TRANSACTIONS
-@transactions=/transactions
+@payment={{clients}}/payment
+@transactions={{clients}}/transactions
+### GET STRIPE PUBLIC KEY
+GET {{payment}}
+Authorization: {{auth}}
 
 ### RETRIEVE ALL TRANSACTIONS OF A CLIENT
-GET {{clients}}{{transactions}}/{{user}}
+GET {{transactions}}/{{user}}
 Authorization: {{auth}}
 
 ### CREATE NEW TRANSACTION AND ADD TO THE CLIENT
-POST {{clients}}{{transactions}}
+POST {{transactions}}
 Authorization: {{auth}}
 Content-Type: application/json
 
 {
-    "user": "tiber",
-    "name": "da8ah",
-    "email": "tiber@email.com",
+    "user": "da8ah.tiber",
+    "name": "Danilo Ochoa Hidalgo",
+    "email": "danilo.ochoa.hidalgo@email.com",
     "mobile": "+593000000001",
     "cards": [
         {

@@ -3,7 +3,7 @@
 @api = http://localhost:{{port}}
 
 ### ADMIN
-@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY3NTI4MDU2NiwiZXhwIjoxNjc1NTM5NzY2fQ.hDVQXztxk06yiA5lnT8dUATO6ixi95mIr6lLlfCDghw
+@auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGliZXIiLCJlbWFpbCI6InRpYmVyQGVtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY3NjIyMTQyOCwiZXhwIjoxNjc2NDgwNjI4fQ.PsERr7IznjzgfsTPTIrPiRG77iSXC4IRlx4f7gY2chc
 @admin={{api}}/api/admin
 @user=tiber
 

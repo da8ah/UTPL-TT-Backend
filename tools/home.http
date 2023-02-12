@@ -7,8 +7,8 @@ POST {{api}}/signin
 Content-Type: application/json
 
 {
-  "user": "tiber",
-  "password": "tiber"
+  "user": "da8ah.tiber",
+  "password": "tibernuncamuere"
 }
 
 ### CREATE CLIENT

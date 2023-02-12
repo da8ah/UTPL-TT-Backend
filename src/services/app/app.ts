@@ -19,8 +19,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(morgan("dev"));
 app.use(passport.initialize());
-passport.use(passportMiddleware.authClient);
-passport.use(passportMiddleware.authAdmin);
+passport.use("admin", passportMiddleware.authAdmin);
+passport.use("client", passportMiddleware.authClient);
 
 // Routes
 app.use(homeRouter);
