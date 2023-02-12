@@ -7,10 +7,13 @@ const stripe = require("stripe")(config.stripeSecKey);
 export default class PaymentController {
 	public getPaymentKey(req: Request, res: Response) {
 		try {
-			return res.status(200).cookie("spk", config.stripePubKey, {
-				expires: new Date(Date.now() + 900000),
-				httpOnly: true,
-			});
+			return res
+				.status(200)
+				.cookie("spk", config.stripePubKey, {
+					expires: new Date(Date.now() + 300),
+					httpOnly: true,
+				})
+				.end();
 		} catch (error) {
 			console.error(error);
 			return res.status(500).json({ msg: "Server internal error!" });

@@ -23,9 +23,9 @@ clientRouter.put(`${API_PATH}/:user`, passportAuth, clientController.updateClien
 // Eliminar Client
 clientRouter.delete(`${API_PATH}/:user`, passportAuth, clientController.deleteClient);
 // Solicitar Payment Credentials
-clientRouter.get(`${API_PATH}/payment`, passportAuth, paymentController.getPaymentKey);
+clientRouter.get(`${API_PATH}/payments`, passportAuth, paymentController.getPaymentKey);
 // Registrar Payment
-clientRouter.post(`${API_PATH}/payment`, passportAuth, paymentController.makePayment);
+clientRouter.post(`${API_PATH}/payments`, passportAuth, paymentController.makePayment);
 // Registrar Transaction
 clientRouter.post(`${API_PATH}/transactions`, passportAuth, transactionsController.createCardTransaction);
 // Traer todas las Transaction de un Client

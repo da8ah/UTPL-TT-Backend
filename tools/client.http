@@ -41,8 +41,9 @@ Authorization: {{auth}}
 
 
 ### TRANSACTIONS
-@payment={{clients}}/payment
+@payment={{clients}}/payments
 @transactions={{clients}}/transactions
+
 ### GET STRIPE PUBLIC KEY
 GET {{payment}}
 Authorization: {{auth}}
