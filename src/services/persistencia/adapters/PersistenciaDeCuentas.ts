@@ -31,18 +31,9 @@ export default class PersistenciaDeCuentas implements IPersistenciaCuenta {
 		try {
 			let clientUpdated: IClientModel | null = null;
 			const client = ClientConverter.clientToJSON(clientToUpdate);
-			const billingInfo = ClientConverter.billingInfoToJSON(clientToUpdate.getBillingInfo() || new BillingInfo());
-			let update = "{ ";
-			Object.entries(client).forEach(([key, value]) => {
-				update += `"${key}" : "${value}", `;
-			});
-			Object.entries(billingInfo).forEach(([key, value]) => {
-				update += `"billingInfo.${key}" : "${value}", `;
-			});
-			update = `${update.substring(0, update.length - 2)} }`;
 			clientUpdated = await ClientModel.findOneAndUpdate(
 				{ user: clientToSearch.getUser()?.toLowerCase() },
-				{ $set: JSON.parse(update) },
+				{ $set: client },
 				{
 					new: true,
 				},

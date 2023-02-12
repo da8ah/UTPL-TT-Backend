@@ -149,16 +149,16 @@ export class ClientConverter {
 	public static billingInfoToJSON(billingInfo: BillingInfo): JSON {
 		let json: any = {};
 		if (billingInfo.getToWhom() != undefined)
-			json["toWhom"] = billingInfo.getToWhom();
+			json["billingInfo.toWhom"] = billingInfo.getToWhom();
 		if (billingInfo.getCi() != undefined) json["ci"] = billingInfo.getCi();
 		if (billingInfo.getProvincia() != undefined)
-			json["provincia"] = billingInfo.getProvincia();
+			json["billingInfo.provincia"] = billingInfo.getProvincia();
 		if (billingInfo.getCiudad() != undefined)
-			json["ciudad"] = billingInfo.getCiudad();
+			json["billingInfo.ciudad"] = billingInfo.getCiudad();
 		if (billingInfo.getNumCasa() != undefined)
-			json["numCasa"] = billingInfo.getNumCasa();
+			json["billingInfo.numCasa"] = billingInfo.getNumCasa();
 		if (billingInfo.getCalles() != undefined)
-			json["calles"] = billingInfo.getCalles();
+			json["billingInfo.calles"] = billingInfo.getCalles();
 		return json;
 	}
 
@@ -182,6 +182,15 @@ export class ClientConverter {
 		if (client.getMobile() != undefined) json["mobile"] = client.getMobile();
 		if (client.getPassword() != undefined)
 			json["password"] = client.getPassword();
+
+		const billingInfo = client.getBillingInfo();
+		if (billingInfo != undefined) json["BillingInfo"] = this.billingInfoToJSON(billingInfo);
+		const cards = client.getCards();
+		if (cards != undefined) json["cards"] = cards.map((card) => this.cardToJSON(card));
+		const transactions = client.getTransactions();
+		if (transactions != undefined) json["transactions"] = transactions.map(
+			(transaction) => TransactionConverter.cardTransactionToJSON(transaction as CardTransaction));
+
 		return json;
 	}
 
@@ -542,11 +551,11 @@ export class InputValidator {
 		if (!(book.isVisible() === undefined || typeof book.isVisible() === "boolean")) return false;
 		if (!(book.isRecommended() === undefined || typeof book.isRecommended() === "boolean")) return false;
 		if (!(book.isBestSeller() === undefined || typeof book.isBestSeller() === "boolean")) return false;
-		if (!(book.isRecent() === undefined || typeof book.isRecent() === "boolean")) return false;		
+		if (!(book.isRecent() === undefined || typeof book.isRecent() === "boolean")) return false;
 		return true;
 	}
 
-	
+
 	private static userPattern = /^[A-Za-z]((\_|\.)?[A-Za-z0-9]){5,19}$/;
 	private static namePattern = /^[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}(\s[A-Za-zÁáÉéÍíÓóÚúÜüÑñ]{1,15}){1,4}$/;
 	private static emailPattern = /^([\w\.\-]+){1,3}@([\w\-]+)((\.(\w){2,3})+)$/;
